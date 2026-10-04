@@ -1,0 +1,309 @@
+@model GoBus.Models.Trip
+
+@{
+    ViewData["Title"] = "Chi tiết chuyến xe";
+}
+
+<div class="container py-5">
+
+    <div class="mb-4">
+        <a asp-controller="Trips"
+           asp-action="Index"
+           class="btn btn-outline-secondary">
+
+            ← Quay lại danh sách chuyến
+
+        </a>
+    </div>
+
+
+    <div class="row g-4">
+
+
+        <!-- =============================== -->
+        <!-- THÔNG TIN CHUYẾN XE -->
+        <!-- =============================== -->
+
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h2 class="mb-4">
+                        Chi tiết chuyến xe
+                    </h2>
+
+
+                    <!-- TUYẾN XE -->
+
+                    <div class="mb-4">
+
+                        <h4>
+
+                            @Model.Route?.Departure
+
+                            <span class="mx-2">
+                                →
+                            </span>
+
+                            @Model.Route?.Destination
+
+                        </h4>
+
+                    </div>
+
+
+                    <!-- THÔNG TIN -->
+
+                    <div class="row g-4">
+
+
+                        <div class="col-md-6">
+
+                            <div class="border rounded p-3">
+
+                                <div class="text-muted">
+                                    Nhà xe
+                                </div>
+
+                                <strong>
+                                    @Model.BusCompany?.Name
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="border rounded p-3">
+
+                                <div class="text-muted">
+                                    Loại xe
+                                </div>
+
+                                <strong>
+                                    @Model.Bus?.BusType
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="border rounded p-3">
+
+                                <div class="text-muted">
+                                    Biển số xe
+                                </div>
+
+                                <strong>
+                                    @Model.Bus?.LicensePlate
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="border rounded p-3">
+
+                                <div class="text-muted">
+                                    Số ghế
+                                </div>
+
+                                <strong>
+                                    @Model.Bus?.TotalSeats ghế
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="border rounded p-3">
+
+                                <div class="text-muted">
+                                    Giờ khởi hành
+                                </div>
+
+                                <strong>
+                                    @Model.DepartureTime.ToString("HH:mm")
+                                </strong>
+
+                                <div>
+                                    @Model.DepartureTime.ToString("dd/MM/yyyy")
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="border rounded p-3">
+
+                                <div class="text-muted">
+                                    Giờ đến
+                                </div>
+
+                                <strong>
+                                    @Model.ArrivalTime.ToString("HH:mm")
+                                </strong>
+
+                                <div>
+                                    @Model.ArrivalTime.ToString("dd/MM/yyyy")
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =============================== -->
+                    <!-- TUYẾN ĐƯỜNG -->
+                    <!-- =============================== -->
+
+                    <hr class="my-4">
+
+
+                    <h5>
+                        Thông tin tuyến đường
+                    </h5>
+
+                    <div class="row mt-3">
+
+                        <div class="col-md-6">
+
+                            <p>
+                                <strong>Khoảng cách:</strong>
+
+                                @Model.Route?.Distance km
+
+                            </p>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <p>
+                                <strong>
+                                    Thời gian dự kiến:
+                                </strong>
+
+                                @if (Model.Route != null)
+                                {
+                                    var hours =
+                                        Model.Route.EstimatedDuration / 60;
+
+                                    var minutes =
+                                        Model.Route.EstimatedDuration % 60;
+
+                                    @($"{hours} giờ {minutes} phút")
+                                }
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =============================== -->
+        <!-- ĐẶT VÉ -->
+        <!-- =============================== -->
+
+        <div class="col-lg-4">
+
+            <div class="card shadow-sm">
+
+                <div class="card-body p-4">
+
+                    <h4 class="mb-4">
+                        Đặt vé
+                    </h4>
+
+
+                    <div class="mb-3">
+
+                        <div class="text-muted">
+                            Giá vé
+                        </div>
+
+                        <h3 class="text-primary">
+
+                            @Model.Price.ToString("N0")
+                            VNĐ
+
+                        </h3>
+
+                    </div>
+
+
+                    <div class="mb-4">
+
+                        <div class="text-muted">
+                            Ghế còn trống
+                        </div>
+
+                        <h5>
+
+                            @Model.AvailableSeats
+
+                            /
+                            
+                            @Model.Bus?.TotalSeats
+
+                            ghế
+
+                        </h5>
+
+                    </div>
+
+
+                    @if (Model.AvailableSeats > 0)
+                    {
+                       <a asp-controller="Seats"
+                        asp-action="Index"
+                        asp-route-tripId="@Model.Id"
+                        class="btn btn-primary w-100">
+                            Chọn ghế
+                        </a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary w-100"
+                                disabled>
+
+                            Hết ghế
+
+                        </button>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

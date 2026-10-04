@@ -1,0 +1,495 @@
+@model List<GoBus.Models.Seat>
+
+@{
+    var trip = ViewBag.Trip as GoBus.Models.Trip;
+}
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Chọn ghế - GoBus</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <style>
+
+        body {
+            background: #f5f7fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .seat-page {
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+
+        .trip-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+
+        .seat-layout-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .bus {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .bus-header {
+            background: #343a40;
+            color: white;
+            padding: 15px;
+            border-radius: 30px 30px 10px 10px;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .seat-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 45px 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .seat {
+            height: 55px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .seat.available {
+            background: #d1fae5;
+            color: #065f46;
+            cursor: pointer;
+        }
+
+        .seat.available:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .seat.selected {
+            background: #0d6efd;
+            color: white;
+        }
+
+        .seat.booked {
+            background: #dc3545;
+            color: white;
+            cursor: not-allowed;
+        }
+
+        .aisle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 12px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .legend-box {
+            width: 25px;
+            height: 25px;
+            border-radius: 6px;
+        }
+
+        .legend-available {
+            background: #d1fae5;
+        }
+
+        .legend-selected {
+            background: #0d6efd;
+        }
+
+        .legend-booked {
+            background: #dc3545;
+        }
+
+        .selected-info {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .selected-seat-list {
+            font-weight: bold;
+            color: #0d6efd;
+        }
+
+        @@media (max-width: 600px) {
+
+            .seat-layout-card {
+                padding: 15px;
+            }
+
+            .seat-row {
+                grid-template-columns: 1fr 1fr 25px 1fr 1fr;
+                gap: 5px;
+            }
+
+            .seat {
+                height: 45px;
+                font-size: 12px;
+            }
+
+            .aisle {
+                font-size: 9px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container seat-page">
+
+    <!-- THÔNG TIN CHUYẾN -->
+    <div class="trip-card">
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+
+            <div>
+                <h3 class="mb-2">
+                    @trip?.Route?.Departure
+                    →
+                    @trip?.Route?.Destination
+                </h3>
+
+                <p class="mb-1">
+                    <strong>Nhà xe:</strong>
+                    @trip?.BusCompany?.Name
+                </p>
+
+                <p class="mb-1">
+                    <strong>Xe:</strong>
+                    @trip?.Bus?.LicensePlate
+                </p>
+
+                <p class="mb-0">
+                    <strong>Khởi hành:</strong>
+                    @trip?.DepartureTime.ToString("dd/MM/yyyy HH:mm")
+                </p>
+            </div>
+
+            <div class="text-end">
+
+                <div class="text-muted">
+                    Giá vé
+                </div>
+
+                <h3 class="text-primary">
+                    @trip?.Price.ToString("N0") đ
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SƠ ĐỒ GHẾ -->
+    <div class="seat-layout-card">
+
+        <h2 class="text-center mb-4">
+            Chọn ghế
+        </h2>
+
+        <div class="bus">
+
+            <div class="bus-header">
+                🚍 ĐẦU XE
+            </div>
+
+
+            @{
+                // Chia ghế thành từng hàng 4 ghế
+                var rows = Model
+                    .Select((seat, index) => new { seat, index })
+                    .GroupBy(x => x.index / 4)
+                    .Select(g => g.Select(x => x.seat).ToList())
+                    .ToList();
+            }
+
+
+            @foreach (var row in rows)
+            {
+                <div class="seat-row">
+
+                    @for (int i = 0; i < 4; i++)
+                    {
+                        if (i < row.Count)
+                        {
+                            var seat = row[i];
+
+                            <button type="button"
+                                    class="seat @(seat.IsBooked ? "booked" : "available")"
+                                    data-seat-id="@seat.Id"
+                                    data-seat-number="@seat.SeatNumber"
+                                    @(seat.IsBooked ? "disabled" : "")>
+
+                                @seat.SeatNumber
+
+                            </button>
+                        }
+                        else
+                        {
+                            <div></div>
+                        }
+
+                        @if (i == 1)
+                        {
+                            <div class="aisle">
+                                LỐI ĐI
+                            </div>
+                        }
+                    }
+
+                </div>
+            }
+
+        </div>
+
+
+        <!-- CHÚ THÍCH -->
+        <div class="legend">
+
+            <div class="legend-item">
+                <div class="legend-box legend-available"></div>
+                <span>Còn trống</span>
+            </div>
+
+            <div class="legend-item">
+                <div class="legend-box legend-selected"></div>
+                <span>Đang chọn</span>
+            </div>
+
+            <div class="legend-item">
+                <div class="legend-box legend-booked"></div>
+                <span>Đã đặt</span>
+            </div>
+
+        </div>
+
+
+        <!-- THÔNG TIN GHẾ ĐANG CHỌN -->
+        <div class="selected-info">
+
+            <div class="row align-items-center">
+
+                <div class="col-md-8">
+
+                    <div>
+                        <strong>Ghế đã chọn:</strong>
+                    </div>
+
+                    <div id="selectedSeats"
+                         class="selected-seat-list mt-2">
+                        Chưa chọn ghế
+                    </div>
+
+                    <div class="mt-2">
+                        Số lượng:
+                        <strong id="selectedCount">0</strong>
+                    </div>
+
+                    <div class="mt-2">
+                        Tổng tiền:
+                        <strong id="totalPrice">0 đ</strong>
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4 mt-3 mt-md-0">
+
+                    <button type="button"
+                            id="continueButton"
+                            class="btn btn-primary btn-lg w-100"
+                            disabled>
+
+                        Tiếp tục đặt vé
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    const seats = document.querySelectorAll(".seat.available");
+
+    const selectedSeatsElement =
+        document.getElementById("selectedSeats");
+
+    const selectedCountElement =
+        document.getElementById("selectedCount");
+
+    const totalPriceElement =
+        document.getElementById("totalPrice");
+
+    const continueButton =
+        document.getElementById("continueButton");
+
+
+    const pricePerSeat =
+        @((trip?.Price ?? 0).ToString(System.Globalization.CultureInfo.InvariantCulture));
+
+
+    let selectedSeats = [];
+
+
+    seats.forEach(seat => {
+
+        seat.addEventListener("click", function () {
+
+            const seatId =
+                this.dataset.seatId;
+
+            const seatNumber =
+                this.dataset.seatNumber;
+
+
+            const existingIndex =
+                selectedSeats.findIndex(
+                    s => s.id === seatId
+                );
+
+
+            if (existingIndex >= 0) {
+
+                // Bỏ chọn
+                selectedSeats.splice(
+                    existingIndex,
+                    1
+                );
+
+                this.classList.remove("selected");
+                this.classList.add("available");
+
+            }
+            else {
+
+                // Chọn ghế
+                selectedSeats.push({
+                    id: seatId,
+                    number: seatNumber
+                });
+
+                this.classList.remove("available");
+                this.classList.add("selected");
+
+            }
+
+
+            updateSelectedSeats();
+
+        });
+
+    });
+
+
+    function updateSelectedSeats() {
+
+        if (selectedSeats.length === 0) {
+
+            selectedSeatsElement.textContent =
+                "Chưa chọn ghế";
+
+            selectedCountElement.textContent =
+                "0";
+
+            totalPriceElement.textContent =
+                "0 đ";
+
+            continueButton.disabled = true;
+
+            return;
+        }
+
+
+        selectedSeatsElement.textContent =
+            selectedSeats
+                .map(s => s.number)
+                .join(", ");
+
+
+        selectedCountElement.textContent =
+            selectedSeats.length;
+
+
+        const total =
+            selectedSeats.length * pricePerSeat;
+
+
+        totalPriceElement.textContent =
+            total.toLocaleString("vi-VN") + " đ";
+
+
+        continueButton.disabled = false;
+
+    }
+
+
+        continueButton.addEventListener("click", function () {
+
+        if (selectedSeats.length === 0) {
+            return;
+        }
+
+        const params = new URLSearchParams();
+
+        params.append("tripId", "@trip?.Id");
+
+        selectedSeats.forEach(seat => {
+            params.append("seatIds", seat.id);
+        });
+
+        window.location.href =
+            "/Bookings/Create?" + params.toString();
+
+    });
+
+</script>
+
+</body>
+</html>

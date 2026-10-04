@@ -1,0 +1,516 @@
+﻿@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+<div class="hero-section">
+
+    <div class="container">
+
+        <!-- ============================= -->
+        <!-- TIÊU ĐỀ -->
+        <!-- ============================= -->
+
+        <div class="hero-content">
+
+            <h1>
+                Đặt vé xe khách dễ dàng
+            </h1>
+
+            <p>
+                Tìm kiếm chuyến xe, chọn ghế và đặt vé
+                nhanh chóng với GoBus.
+            </p>
+
+        </div>
+
+
+        <!-- ============================= -->
+        <!-- FORM TÌM KIẾM CHUYẾN XE -->
+        <!-- ============================= -->
+
+        <form asp-controller="Trips"
+              asp-action="Index"
+              method="get"
+              class="search-box"
+              id="searchForm">
+
+
+            <!-- ============================= -->
+            <!-- ĐIỂM ĐI -->
+            <!-- ============================= -->
+
+            <div class="search-item">
+
+                <label>
+                    Điểm đi
+                </label>
+
+                <select name="departure"
+                        class="form-select">
+
+                    <option value="">
+                        Chọn điểm đi
+                    </option>
+
+                    <option>Hà Nội</option>
+                    <option>Hải Phòng</option>
+                    <option>Quảng Ninh</option>
+                    <option>Hà Giang</option>
+                    <option>Cao Bằng</option>
+                    <option>Bắc Kạn</option>
+                    <option>Tuyên Quang</option>
+                    <option>Lào Cai</option>
+                    <option>Yên Bái</option>
+                    <option>Thái Nguyên</option>
+                    <option>Lạng Sơn</option>
+                    <option>Bắc Giang</option>
+                    <option>Phú Thọ</option>
+                    <option>Vĩnh Phúc</option>
+                    <option>Bắc Ninh</option>
+                    <option>Hải Dương</option>
+                    <option>Hưng Yên</option>
+                    <option>Thái Bình</option>
+                    <option>Hà Nam</option>
+                    <option>Nam Định</option>
+                    <option>Ninh Bình</option>
+                    <option>Thanh Hóa</option>
+                    <option>Nghệ An</option>
+                    <option>Hà Tĩnh</option>
+                    <option>Quảng Bình</option>
+                    <option>Quảng Trị</option>
+                    <option>Thừa Thiên Huế</option>
+                    <option>Đà Nẵng</option>
+                    <option>Quảng Nam</option>
+                    <option>Quảng Ngãi</option>
+                    <option>Bình Định</option>
+                    <option>Phú Yên</option>
+                    <option>Khánh Hòa</option>
+                    <option>Ninh Thuận</option>
+                    <option>Bình Thuận</option>
+                    <option>Kon Tum</option>
+                    <option>Gia Lai</option>
+                    <option>Đắk Lắk</option>
+                    <option>Đắk Nông</option>
+                    <option>Lâm Đồng</option>
+                    <option>Bình Phước</option>
+                    <option>Tây Ninh</option>
+                    <option>Bình Dương</option>
+                    <option>Đồng Nai</option>
+                    <option>Bà Rịa - Vũng Tàu</option>
+                    <option>TP. Hồ Chí Minh</option>
+                    <option>Long An</option>
+                    <option>Tiền Giang</option>
+                    <option>Bến Tre</option>
+                    <option>Trà Vinh</option>
+                    <option>Vĩnh Long</option>
+                    <option>Đồng Tháp</option>
+                    <option>An Giang</option>
+                    <option>Kiên Giang</option>
+                    <option>Cần Thơ</option>
+                    <option>Hậu Giang</option>
+                    <option>Sóc Trăng</option>
+                    <option>Bạc Liêu</option>
+                    <option>Cà Mau</option>
+
+                </select>
+
+            </div>
+
+
+            <!-- ============================= -->
+            <!-- ĐIỂM ĐẾN -->
+            <!-- ============================= -->
+
+            <div class="search-item">
+
+                <label>
+                    Điểm đến
+                </label>
+
+                <select name="destination"
+                        class="form-select">
+
+                    <option value="">
+                        Chọn điểm đến
+                    </option>
+
+                    <option>Hà Nội</option>
+                    <option>Hải Phòng</option>
+                    <option>Quảng Ninh</option>
+                    <option>Hà Giang</option>
+                    <option>Cao Bằng</option>
+                    <option>Bắc Kạn</option>
+                    <option>Tuyên Quang</option>
+                    <option>Lào Cai</option>
+                    <option>Yên Bái</option>
+                    <option>Thái Nguyên</option>
+                    <option>Lạng Sơn</option>
+                    <option>Bắc Giang</option>
+                    <option>Phú Thọ</option>
+                    <option>Vĩnh Phúc</option>
+                    <option>Bắc Ninh</option>
+                    <option>Hải Dương</option>
+                    <option>Hưng Yên</option>
+                    <option>Thái Bình</option>
+                    <option>Hà Nam</option>
+                    <option>Nam Định</option>
+                    <option>Ninh Bình</option>
+                    <option>Thanh Hóa</option>
+                    <option>Nghệ An</option>
+                    <option>Hà Tĩnh</option>
+                    <option>Quảng Bình</option>
+                    <option>Quảng Trị</option>
+                    <option>Thừa Thiên Huế</option>
+                    <option>Đà Nẵng</option>
+                    <option>Quảng Nam</option>
+                    <option>Quảng Ngãi</option>
+                    <option>Bình Định</option>
+                    <option>Phú Yên</option>
+                    <option>Khánh Hòa</option>
+                    <option>Ninh Thuận</option>
+                    <option>Bình Thuận</option>
+                    <option>Kon Tum</option>
+                    <option>Gia Lai</option>
+                    <option>Đắk Lắk</option>
+                    <option>Đắk Nông</option>
+                    <option>Lâm Đồng</option>
+                    <option>Bình Phước</option>
+                    <option>Tây Ninh</option>
+                    <option>Bình Dương</option>
+                    <option>Đồng Nai</option>
+                    <option>Bà Rịa - Vũng Tàu</option>
+                    <option>TP. Hồ Chí Minh</option>
+                    <option>Long An</option>
+                    <option>Tiền Giang</option>
+                    <option>Bến Tre</option>
+                    <option>Trà Vinh</option>
+                    <option>Vĩnh Long</option>
+                    <option>Đồng Tháp</option>
+                    <option>An Giang</option>
+                    <option>Kiên Giang</option>
+                    <option>Cần Thơ</option>
+                    <option>Hậu Giang</option>
+                    <option>Sóc Trăng</option>
+                    <option>Bạc Liêu</option>
+                    <option>Cà Mau</option>
+
+                </select>
+
+            </div>
+
+
+            <!-- ============================= -->
+            <!-- NGÀY ĐI -->
+            <!-- ============================= -->
+
+            <div class="search-item">
+
+                <label>
+                    Ngày đi
+                </label>
+
+                <input type="text"
+                       id="dateDisplay"
+                       class="form-control"
+                       placeholder="DD/MM/YYYY"
+                       maxlength="10"
+                       autocomplete="off">
+
+                <input type="hidden"
+                       id="date"
+                       name="date">
+
+            </div>
+
+
+            <!-- ============================= -->
+            <!-- NÚT TÌM KIẾM -->
+            <!-- ============================= -->
+
+            <div class="search-button">
+
+                <button type="submit"
+                        class="btn btn-primary">
+
+                    🔍 Tìm chuyến
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- ============================= -->
+<!-- TUYẾN XE PHỔ BIẾN -->
+<!-- ============================= -->
+
+<div class="container popular-routes">
+
+    <h2>
+        Tuyến xe phổ biến
+    </h2>
+
+
+    <div class="row">
+
+
+        <!-- ============================= -->
+        <!-- HÀ NỘI → ĐÀ NẴNG -->
+        <!-- ============================= -->
+
+        <div class="col-md-4">
+
+            <div class="route-card">
+
+                <h4>
+                    Hà Nội → Đà Nẵng
+                </h4>
+
+                <p>
+                    Từ 450.000 VNĐ
+                </p>
+
+                <a asp-controller="Trips"
+                   asp-action="Index"
+                   asp-route-departure="Hà Nội"
+                   asp-route-destination="Đà Nẵng"
+                   class="btn btn-outline-primary">
+
+                    Xem chuyến
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- ============================= -->
+        <!-- TP.HCM → LÂM ĐỒNG -->
+        <!-- ============================= -->
+
+        <div class="col-md-4">
+
+            <div class="route-card">
+
+                <h4>
+                    TP. Hồ Chí Minh → Lâm Đồng
+                </h4>
+
+                <p>
+                    Từ 300.000 VNĐ
+                </p>
+
+                <a asp-controller="Trips"
+                   asp-action="Index"
+                   asp-route-departure="TP. Hồ Chí Minh"
+                   asp-route-destination="Lâm Đồng"
+                   class="btn btn-outline-primary">
+
+                    Xem chuyến
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- ============================= -->
+        <!-- ĐÀ NẴNG → HUẾ -->
+        <!-- ============================= -->
+
+        <div class="col-md-4">
+
+            <div class="route-card">
+
+                <h4>
+                    Đà Nẵng → Thừa Thiên Huế
+                </h4>
+
+                <p>
+                    Từ 150.000 VNĐ
+                </p>
+
+                <a asp-controller="Trips"
+                   asp-action="Index"
+                   asp-route-departure="Đà Nẵng"
+                   asp-route-destination="Thừa Thiên Huế"
+                   class="btn btn-outline-primary">
+
+                    Xem chuyến
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- ============================= -->
+<!-- JAVASCRIPT NGÀY -->
+<!-- ============================= -->
+
+<script>
+
+    const dateDisplay =
+        document.getElementById("dateDisplay");
+
+    const hiddenDate =
+        document.getElementById("date");
+
+    const searchForm =
+        document.getElementById("searchForm");
+
+
+    // ==========================================
+    // Tự động thêm dấu /
+    // ==========================================
+
+    dateDisplay.addEventListener("input", function () {
+
+        let value =
+            this.value.replace(/\D/g, "");
+
+        if (value.length > 8) {
+            value = value.substring(0, 8);
+        }
+
+
+        if (value.length >= 5) {
+
+            value =
+                value.substring(0, 2)
+                + "/"
+                + value.substring(2, 4)
+                + "/"
+                + value.substring(4);
+
+        }
+        else if (value.length >= 3) {
+
+            value =
+                value.substring(0, 2)
+                + "/"
+                + value.substring(2);
+
+        }
+
+
+        this.value = value;
+
+    });
+
+
+    // ==========================================
+    // Kiểm tra ngày
+    // ==========================================
+
+    searchForm.addEventListener("submit", function (event) {
+
+        const value =
+            dateDisplay.value.trim();
+
+
+        // Không nhập ngày
+        if (value === "") {
+
+            hiddenDate.value = "";
+
+            return;
+        }
+
+
+        // Kiểm tra định dạng DD/MM/YYYY
+        const regex =
+            /^(\d{2})\/(\d{2})\/(\d{4})$/;
+
+
+        const match =
+            value.match(regex);
+
+
+        if (!match) {
+
+            event.preventDefault();
+
+            dateDisplay.focus();
+
+            return;
+        }
+
+
+        const day =
+            parseInt(match[1]);
+
+        const month =
+            parseInt(match[2]);
+
+        const year =
+            parseInt(match[3]);
+
+
+        // Kiểm tra tháng
+        if (month < 1 || month > 12) {
+
+            event.preventDefault();
+
+            alert("Tháng không hợp lệ.");
+
+            dateDisplay.focus();
+
+            return;
+        }
+
+
+        // Kiểm tra ngày thực tế
+        const testDate =
+            new Date(
+                year,
+                month - 1,
+                day
+            );
+
+
+        if (
+            testDate.getFullYear() !== year ||
+            testDate.getMonth() !== month - 1 ||
+            testDate.getDate() !== day
+        ) {
+
+            event.preventDefault();
+
+            alert("Ngày không hợp lệ.");
+
+            dateDisplay.focus();
+
+            return;
+        }
+
+
+        // ======================================
+        // Chuyển DD/MM/YYYY
+        // thành YYYY-MM-DD
+        // ======================================
+
+        hiddenDate.value =
+            year
+            + "-"
+            + String(month).padStart(2, "0")
+            + "-"
+            + String(day).padStart(2, "0");
+
+    });
+
+</script>

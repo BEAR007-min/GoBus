@@ -1,0 +1,99 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}
+
+.hero-section {
+    padding: 80px 0;
+    background: #f5f7fb;
+}
+
+.hero-content {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.hero-content h1 {
+    font-size: 42px;
+    font-weight: 700;
+}
+
+.hero-content p {
+    font-size: 18px;
+    color: #666;
+}
+
+.search-box {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr auto;
+    gap: 15px;
+    align-items: end;
+}
+
+.search-item label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.search-button button {
+    height: 38px;
+    padding: 0 25px;
+}
+
+.popular-routes {
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+.popular-routes h2 {
+    margin-bottom: 30px;
+}
+
+.route-card {
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    background: white;
+}
+
+.route-card h4 {
+    font-weight: 600;
+}
+
+.route-card p {
+    color: #666;
+}

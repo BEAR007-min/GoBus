@@ -1,0 +1,153 @@
+@model IEnumerable<GoBus.Models.Trip>
+
+@{
+    ViewData["Title"] = "Tìm chuyến xe";
+}
+
+<div class="container py-4">
+
+    <div class="mb-4">
+        <h2>Tìm chuyến xe</h2>
+
+        <p class="text-muted">
+            Các chuyến xe phù hợp với yêu cầu của bạn
+        </p>
+    </div>
+
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">
+            Không tìm thấy chuyến xe phù hợp.
+        </div>
+    }
+    else
+    {
+        <div class="mb-3">
+            <strong>
+                Tìm thấy @Model.Count() chuyến xe
+            </strong>
+        </div>
+
+
+        @foreach (var trip in Model)
+        {
+            <div class="card shadow-sm mb-3">
+
+                <div class="card-body">
+
+                    <div class="row align-items-center">
+
+
+                        <!-- NHÀ XE -->
+                        <div class="col-md-2">
+
+                            <h5 class="mb-1">
+                                @trip.BusCompany?.Name
+                            </h5>
+
+                            <small class="text-muted">
+                                @trip.Bus?.BusType
+                            </small>
+
+                        </div>
+
+
+                        <!-- GIỜ ĐI -->
+                        <div class="col-md-2 text-center">
+
+                            <h4>
+                                @trip.DepartureTime.ToString("HH:mm")
+                            </h4>
+
+                            <span>
+                                @trip.Route?.Departure
+                            </span>
+
+                        </div>
+
+
+                        <!-- THỜI GIAN -->
+                        <div class="col-md-2 text-center">
+
+                            <small class="text-muted">
+                                Thời gian
+                            </small>
+
+                            <br />
+
+                            <span>
+                                @(
+                                    (trip.ArrivalTime - trip.DepartureTime)
+                                    .Hours
+                                ) giờ
+                                @(
+                                    (trip.ArrivalTime - trip.DepartureTime)
+                                    .Minutes
+                                ) phút
+                            </span>
+
+                            <div class="text-muted">
+                                ─────────
+                            </div>
+
+                        </div>
+
+
+                        <!-- GIỜ ĐẾN -->
+                        <div class="col-md-2 text-center">
+
+                            <h4>
+                                @trip.ArrivalTime.ToString("HH:mm")
+                            </h4>
+
+                            <span>
+                                @trip.Route?.Destination
+                            </span>
+
+                        </div>
+
+
+                        <!-- GIÁ + GHẾ -->
+                        <div class="col-md-2">
+
+                            <h5 class="text-primary">
+                                @trip.Price.ToString("N0") đ
+                            </h5>
+
+                            <small class="text-muted">
+                                💺 Còn @trip.AvailableSeats ghế
+                            </small>
+
+                            <br />
+
+                            <small class="text-muted">
+                                🚌 @trip.Bus?.LicensePlate
+                            </small>
+
+                        </div>
+
+
+                        <!-- CHỌN CHUYẾN -->
+                        <div class="col-md-2 text-end">
+
+                            <a asp-controller="Trips"
+                               asp-action="Details"
+                               asp-route-id="@trip.Id"
+                               class="btn btn-primary">
+
+                                Chọn chuyến
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+    }
+
+</div>
