@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("GoBus")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+480d4c28972937cd2d73ee252049a626e0392f5a")]
 [assembly: System.Reflection.AssemblyProductAttribute("GoBus")]
 [assembly: System.Reflection.AssemblyTitleAttribute("GoBus")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

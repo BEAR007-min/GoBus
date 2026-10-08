@@ -4,141 +4,692 @@
     ViewData["Title"] = "Tìm chuyến xe";
 }
 
-<div class="container py-4">
+<style>
 
-    <div class="mb-4">
-        <h2>Tìm chuyến xe</h2>
+    /* ================================
+       TRANG TÌM CHUYẾN
+       ================================ */
+
+    .trips-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding-top: 35px;
+        padding-bottom: 60px;
+    }
+
+
+    /* ================================
+       HEADER
+       ================================ */
+
+    .trips-header {
+        margin-bottom: 25px;
+    }
+
+    .trips-header h2 {
+        font-size: 30px;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #222;
+    }
+
+    .trips-header p {
+        font-size: 15px;
+    }
+
+
+    /* ================================
+       SỐ LƯỢNG KẾT QUẢ
+       ================================ */
+
+    .trip-result-header {
+        background: #f5f7fb;
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 18px;
+        color: #333;
+    }
+
+
+    /* ================================
+       CARD CHUYẾN XE
+       ================================ */
+
+    .trip-card {
+        background: #ffffff;
+        border: 1px solid #e2e6ea;
+        border-radius: 16px;
+        margin-bottom: 18px;
+        overflow: hidden;
+
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+
+        transition: all 0.2s ease;
+    }
+
+    .trip-card:hover {
+        transform: translateY(-3px);
+
+        box-shadow:
+            0 10px 30px rgba(0, 0, 0, 0.10);
+
+        border-color: #b9d7ff;
+    }
+
+
+    /* ================================
+       HEADER CARD
+       ================================ */
+
+    .trip-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        padding: 18px 22px;
+
+        background: #fafbfc;
+
+        border-bottom: 1px solid #edf0f2;
+    }
+
+
+    .company-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+
+    .company-icon {
+        width: 48px;
+        height: 48px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 12px;
+
+        background: #eaf4ff;
+
+        font-size: 25px;
+    }
+
+
+    .company-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #222;
+        margin: 0;
+    }
+
+
+    .bus-type {
+        margin-top: 3px;
+
+        font-size: 13px;
+
+        color: #777;
+    }
+
+
+    /* ================================
+       GIÁ
+       ================================ */
+
+    .trip-price-box {
+        text-align: right;
+    }
+
+
+    .trip-price-label {
+        font-size: 12px;
+        color: #777;
+    }
+
+
+    .trip-price {
+        font-size: 22px;
+        font-weight: 700;
+        color: #0d6efd;
+    }
+
+
+    /* ================================
+       BODY
+       ================================ */
+
+    .trip-card-body {
+        padding: 22px;
+    }
+
+
+    /* ================================
+       ROUTE
+       ================================ */
+
+    .trip-route {
+        display: grid;
+
+        grid-template-columns:
+            1fr
+            1.4fr
+            1fr;
+
+        align-items: center;
+
+        gap: 20px;
+    }
+
+
+    .trip-point {
+        text-align: center;
+    }
+
+
+    .trip-time {
+        font-size: 28px;
+        font-weight: 700;
+        color: #222;
+    }
+
+
+    .trip-place {
+        margin-top: 4px;
+
+        font-size: 15px;
+
+        font-weight: 500;
+
+        color: #555;
+    }
+
+
+    /* ================================
+       ĐƯỜNG NỐI
+       ================================ */
+
+    .trip-middle {
+        text-align: center;
+    }
+
+
+    .trip-duration {
+        font-size: 13px;
+        color: #777;
+        margin-bottom: 10px;
+    }
+
+
+    .trip-line {
+        position: relative;
+
+        height: 2px;
+
+        background: #d7dce1;
+
+        margin: 0 10px;
+    }
+
+
+    .trip-line::before {
+        content: "";
+
+        position: absolute;
+
+        left: 0;
+        top: 50%;
+
+        width: 9px;
+        height: 9px;
+
+        transform: translateY(-50%);
+
+        border-radius: 50%;
+
+        background: #0d6efd;
+    }
+
+
+    .trip-line::after {
+        content: "›";
+
+        position: absolute;
+
+        right: -2px;
+        top: 50%;
+
+        transform: translateY(-58%);
+
+        font-size: 22px;
+
+        color: #0d6efd;
+    }
+
+
+    /* ================================
+       THÔNG TIN BÊN DƯỚI
+       ================================ */
+
+    .trip-extra {
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        margin-top: 25px;
+
+        padding-top: 18px;
+
+        border-top: 1px solid #edf0f2;
+    }
+
+
+    .trip-details {
+        display: flex;
+
+        gap: 25px;
+
+        color: #666;
+
+        font-size: 14px;
+    }
+
+
+    .trip-detail-item {
+        display: flex;
+
+        align-items: center;
+
+        gap: 6px;
+    }
+
+
+    .seat-available {
+        color: #198754;
+
+        font-weight: 500;
+    }
+
+
+    .seat-full {
+        color: #dc3545;
+
+        font-weight: 600;
+    }
+
+
+    /* ================================
+       BUTTON
+       ================================ */
+
+    .trip-action .btn {
+        min-width: 135px;
+
+        padding: 10px 20px;
+
+        border-radius: 9px;
+
+        font-weight: 600;
+    }
+
+
+    /* ================================
+       HẾT CHUYẾN
+       ================================ */
+
+    .no-trip-box {
+        padding: 60px 25px;
+
+        text-align: center;
+
+        background: white;
+
+        border: 1px solid #e2e6ea;
+
+        border-radius: 16px;
+
+        box-shadow: 0 4px 15px rgba(0,0,0,.05);
+    }
+
+
+    .no-trip-icon {
+        font-size: 50px;
+
+        margin-bottom: 15px;
+    }
+
+
+    /* ================================
+       MOBILE
+       ================================ */
+
+    @@media (max-width: 767px) {
+
+        .trips-page {
+            padding: 25px 15px 50px;
+        }
+
+
+        .trip-card-header {
+            padding: 15px;
+        }
+
+
+        .trip-card-body {
+            padding: 18px;
+        }
+
+
+        .trip-route {
+            grid-template-columns:
+                1fr
+                0.7fr
+                1fr;
+
+            gap: 8px;
+        }
+
+
+        .trip-time {
+            font-size: 23px;
+        }
+
+
+        .trip-place {
+            font-size: 13px;
+        }
+
+
+        .trip-price {
+            font-size: 19px;
+        }
+
+
+        .trip-extra {
+            flex-direction: column;
+
+            align-items: stretch;
+
+            gap: 18px;
+        }
+
+
+        .trip-details {
+            flex-direction: column;
+
+            gap: 8px;
+        }
+
+
+        .trip-action .btn {
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+
+<div class="container trips-page">
+
+    <!-- ============================= -->
+    <!-- TIÊU ĐỀ -->
+    <!-- ============================= -->
+
+    <div class="trips-header">
+
+        <h2>
+            Tìm chuyến xe
+        </h2>
 
         <p class="text-muted">
             Các chuyến xe phù hợp với yêu cầu của bạn
         </p>
+
     </div>
 
 
+    <!-- ============================= -->
+    <!-- KHÔNG CÓ KẾT QUẢ -->
+    <!-- ============================= -->
+
     @if (!Model.Any())
     {
-        <div class="alert alert-warning">
-            Không tìm thấy chuyến xe phù hợp.
+        <div class="no-trip-box">
+
+            <div class="no-trip-icon">
+                🚌
+            </div>
+
+            <h4>
+                Không tìm thấy chuyến xe
+            </h4>
+
+            <p class="text-muted">
+                Hiện tại chưa có chuyến xe phù hợp.
+                Hãy thử thay đổi điểm đi, điểm đến hoặc ngày đi.
+            </p>
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="btn btn-primary">
+
+                ← Tìm kiếm lại
+
+            </a>
+
         </div>
     }
     else
     {
-        <div class="mb-3">
+
+        <!-- ============================= -->
+        <!-- KẾT QUẢ -->
+        <!-- ============================= -->
+
+        <div class="trip-result-header">
+
             <strong>
                 Tìm thấy @Model.Count() chuyến xe
             </strong>
+
         </div>
 
 
+        <!-- ============================= -->
+        <!-- DANH SÁCH -->
+        <!-- ============================= -->
+
         @foreach (var trip in Model)
         {
-            <div class="card shadow-sm mb-3">
-
-                <div class="card-body">
-
-                    <div class="row align-items-center">
+            var duration =
+                trip.ArrivalTime - trip.DepartureTime;
 
 
-                        <!-- NHÀ XE -->
-                        <div class="col-md-2">
+            <div class="trip-card">
 
-                            <h5 class="mb-1">
+                <!-- ============================= -->
+                <!-- CARD HEADER -->
+                <!-- ============================= -->
+
+                <div class="trip-card-header">
+
+                    <div class="company-info">
+
+                        <div class="company-icon">
+                            🚌
+                        </div>
+
+                        <div>
+
+                            <div class="company-name">
                                 @trip.BusCompany?.Name
-                            </h5>
+                            </div>
 
-                            <small class="text-muted">
+                            <div class="bus-type">
                                 @trip.Bus?.BusType
-                            </small>
+                            </div>
 
                         </div>
 
+                    </div>
 
-                        <!-- GIỜ ĐI -->
-                        <div class="col-md-2 text-center">
 
-                            <h4>
+                    <div class="trip-price-box">
+
+                        <div class="trip-price-label">
+                            Giá vé
+                        </div>
+
+                        <div class="trip-price">
+                            @trip.Price.ToString("N0") đ
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ============================= -->
+                <!-- CARD BODY -->
+                <!-- ============================= -->
+
+                <div class="trip-card-body">
+
+
+                    <!-- ROUTE -->
+
+                    <div class="trip-route">
+
+
+                        <!-- ĐIỂM ĐI -->
+
+                        <div class="trip-point">
+
+                            <div class="trip-time">
                                 @trip.DepartureTime.ToString("HH:mm")
-                            </h4>
+                            </div>
 
-                            <span>
+                            <div class="trip-place">
                                 @trip.Route?.Departure
-                            </span>
-
-                        </div>
-
-
-                        <!-- THỜI GIAN -->
-                        <div class="col-md-2 text-center">
-
-                            <small class="text-muted">
-                                Thời gian
-                            </small>
-
-                            <br />
-
-                            <span>
-                                @(
-                                    (trip.ArrivalTime - trip.DepartureTime)
-                                    .Hours
-                                ) giờ
-                                @(
-                                    (trip.ArrivalTime - trip.DepartureTime)
-                                    .Minutes
-                                ) phút
-                            </span>
-
-                            <div class="text-muted">
-                                ─────────
                             </div>
 
                         </div>
 
 
-                        <!-- GIỜ ĐẾN -->
-                        <div class="col-md-2 text-center">
+                        <!-- GIỮA -->
 
-                            <h4>
+                        <div class="trip-middle">
+
+                            <div class="trip-duration">
+
+                                @duration.Hours giờ
+                                @duration.Minutes phút
+
+                            </div>
+
+                            <div class="trip-line"></div>
+
+                        </div>
+
+
+                        <!-- ĐIỂM ĐẾN -->
+
+                        <div class="trip-point">
+
+                            <div class="trip-time">
                                 @trip.ArrivalTime.ToString("HH:mm")
-                            </h4>
+                            </div>
 
-                            <span>
+                            <div class="trip-place">
                                 @trip.Route?.Destination
-                            </span>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ============================= -->
+                    <!-- THÔNG TIN + BUTTON -->
+                    <!-- ============================= -->
+
+                    <div class="trip-extra">
+
+
+                        <div class="trip-details">
+
+                            <div class="trip-detail-item">
+
+                                🚌
+
+                                <span>
+                                    @trip.Bus?.LicensePlate
+                                </span>
+
+                            </div>
+
+
+                            @if (trip.AvailableSeats > 0)
+                            {
+                                <div class="trip-detail-item seat-available">
+
+                                    💺
+
+                                    <span>
+                                        Còn
+                                        <strong>
+                                            @trip.AvailableSeats
+                                        </strong>
+                                        ghế
+                                    </span>
+
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="trip-detail-item seat-full">
+
+                                    🔴
+
+                                    <span>
+                                        Hết chỗ
+                                    </span>
+
+                                </div>
+                            }
 
                         </div>
 
 
-                        <!-- GIÁ + GHẾ -->
-                        <div class="col-md-2">
+                        <!-- BUTTON -->
 
-                            <h5 class="text-primary">
-                                @trip.Price.ToString("N0") đ
-                            </h5>
+                        <div class="trip-action">
 
-                            <small class="text-muted">
-                                💺 Còn @trip.AvailableSeats ghế
-                            </small>
+                            @if (trip.AvailableSeats > 0)
+                            {
+                                <a asp-controller="Trips"
+                                   asp-action="Details"
+                                   asp-route-id="@trip.Id"
+                                   class="btn btn-primary">
 
-                            <br />
+                                    Chọn chuyến
 
-                            <small class="text-muted">
-                                🚌 @trip.Bus?.LicensePlate
-                            </small>
+                                </a>
+                            }
+                            else
+                            {
+                                <button type="button"
+                                        class="btn btn-secondary"
+                                        disabled>
 
-                        </div>
+                                    Hết chỗ
 
-
-                        <!-- CHỌN CHUYẾN -->
-                        <div class="col-md-2 text-end">
-
-                            <a asp-controller="Trips"
-                               asp-action="Details"
-                               asp-route-id="@trip.Id"
-                               class="btn btn-primary">
-
-                                Chọn chuyến
-
-                            </a>
+                                </button>
+                            }
 
                         </div>
 
@@ -148,6 +699,7 @@
 
             </div>
         }
+
     }
 
 </div>

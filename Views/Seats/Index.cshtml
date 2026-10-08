@@ -1,216 +1,202 @@
 @model List<GoBus.Models.Seat>
 
 @{
+    ViewData["Title"] = "Chọn chỗ";
+
     var trip = ViewBag.Trip as GoBus.Models.Trip;
+
+    var bus = trip?.Bus;
+
+    bool isSleeper =
+        ViewBag.IsSleeper == true;
+
+    string vehicleIcon =
+        isSleeper ? "🛏️" : "💺";
+
+    string vehicleTitle =
+        isSleeper
+            ? "XE GIƯỜNG NẰM"
+            : "XE GHẾ NGỒI";
+
+    string pageTitle =
+        isSleeper
+            ? "Chọn giường"
+            : "Chọn ghế";
+
+    string layoutTitle =
+        isSleeper
+            ? "SƠ ĐỒ 24 GIƯỜNG"
+            : "SƠ ĐỒ 45 GHẾ";
+
+    int totalPlaces =
+        isSleeper ? 24 : 45;
+
+    string departure =
+        trip?.Route?.Departure ?? "Chưa xác định";
+
+    string destination =
+        trip?.Route?.Destination ?? "Chưa xác định";
+
+    string companyName =
+        trip?.BusCompany?.Name ?? "GoBus";
+
+    string busType =
+        isSleeper
+            ? "Giường nằm 24 chỗ"
+            : "Ghế ngồi 45 chỗ";
+
+    string departureTime =
+        trip?.DepartureTime.ToString("HH:mm")
+        ?? "--:--";
+
+    string departureDate =
+        trip?.DepartureTime.ToString("dd/MM/yyyy")
+        ?? "--/--/----";
+
+    decimal price =
+        trip?.Price ?? 0;
+
+    int availablePlaces =
+        Model.Count(s => !s.IsBooked);
 }
 
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="utf-8" />
+<div class="seat-page">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- ================================================= -->
+    <!-- HEADER -->
+    <!-- ================================================= -->
 
-    <title>Chọn ghế - GoBus</title>
+    <div class="top-section">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
+        <div>
 
-    <style>
-
-        body {
-            background: #f5f7fa;
-            font-family: Arial, sans-serif;
-        }
-
-        .seat-page {
-            max-width: 1100px;
-            margin: 40px auto;
-        }
-
-        .trip-card {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            margin-bottom: 25px;
-        }
-
-        .seat-layout-card {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-        }
-
-        .bus {
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        .bus-header {
-            background: #343a40;
-            color: white;
-            padding: 15px;
-            border-radius: 30px 30px 10px 10px;
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
-        .seat-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 45px 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .seat {
-            height: 55px;
-            border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            transition: 0.2s;
-        }
-
-        .seat.available {
-            background: #d1fae5;
-            color: #065f46;
-            cursor: pointer;
-        }
-
-        .seat.available:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-        }
-
-        .seat.selected {
-            background: #0d6efd;
-            color: white;
-        }
-
-        .seat.booked {
-            background: #dc3545;
-            color: white;
-            cursor: not-allowed;
-        }
-
-        .aisle {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-            font-size: 12px;
-        }
-
-        .legend {
-            display: flex;
-            justify-content: center;
-            gap: 25px;
-            margin-top: 30px;
-            flex-wrap: wrap;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .legend-box {
-            width: 25px;
-            height: 25px;
-            border-radius: 6px;
-        }
-
-        .legend-available {
-            background: #d1fae5;
-        }
-
-        .legend-selected {
-            background: #0d6efd;
-        }
-
-        .legend-booked {
-            background: #dc3545;
-        }
-
-        .selected-info {
-            margin-top: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 12px;
-        }
-
-        .selected-seat-list {
-            font-weight: bold;
-            color: #0d6efd;
-        }
-
-        @@media (max-width: 600px) {
-
-            .seat-layout-card {
-                padding: 15px;
-            }
-
-            .seat-row {
-                grid-template-columns: 1fr 1fr 25px 1fr 1fr;
-                gap: 5px;
-            }
-
-            .seat {
-                height: 45px;
-                font-size: 12px;
-            }
-
-            .aisle {
-                font-size: 9px;
-            }
-        }
-
-    </style>
-</head>
-
-<body>
-
-<div class="container seat-page">
-
-    <!-- THÔNG TIN CHUYẾN -->
-    <div class="trip-card">
-
-        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
-
-            <div>
-                <h3 class="mb-2">
-                    @trip?.Route?.Departure
-                    →
-                    @trip?.Route?.Destination
-                </h3>
-
-                <p class="mb-1">
-                    <strong>Nhà xe:</strong>
-                    @trip?.BusCompany?.Name
-                </p>
-
-                <p class="mb-1">
-                    <strong>Xe:</strong>
-                    @trip?.Bus?.LicensePlate
-                </p>
-
-                <p class="mb-0">
-                    <strong>Khởi hành:</strong>
-                    @trip?.DepartureTime.ToString("dd/MM/yyyy HH:mm")
-                </p>
+            <div class="vehicle-badge">
+                @vehicleIcon @vehicleTitle
             </div>
 
-            <div class="text-end">
+            <h1>
+                @pageTitle
+            </h1>
 
-                <div class="text-muted">
-                    Giá vé
+            <div class="route">
+
+                <span>
+                    @departure
+                </span>
+
+                <span class="arrow">
+                    →
+                </span>
+
+                <span>
+                    @destination
+                </span>
+
+            </div>
+
+        </div>
+
+        <div class="price-box">
+
+            <div class="price-label">
+                Giá vé
+            </div>
+
+            <div class="price">
+                @price.ToString("N0") đ
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- THÔNG TIN CHUYẾN -->
+    <!-- ================================================= -->
+
+    <div class="trip-info">
+
+        <div class="trip-info-item">
+
+            <div class="info-icon">
+                🏢
+            </div>
+
+            <div>
+
+                <div class="label">
+                    Nhà xe
                 </div>
 
-                <h3 class="text-primary">
-                    @trip?.Price.ToString("N0") đ
-                </h3>
+                <strong>
+                    @companyName
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="trip-info-item">
+
+            <div class="info-icon">
+                @vehicleIcon
+            </div>
+
+            <div>
+
+                <div class="label">
+                    Loại xe
+                </div>
+
+                <strong>
+                    @busType
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="trip-info-item">
+
+            <div class="info-icon">
+                🕘
+            </div>
+
+            <div>
+
+                <div class="label">
+                    Khởi hành
+                </div>
+
+                <strong>
+                    @departureTime - @departureDate
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="trip-info-item">
+
+            <div class="info-icon">
+                @vehicleIcon
+            </div>
+
+            <div>
+
+                <div class="label">
+                    Còn lại
+                </div>
+
+                <strong>
+                    @availablePlaces /
+                    @totalPlaces
+                    @(isSleeper ? "giường" : "ghế")
+                </strong>
 
             </div>
 
@@ -219,133 +205,402 @@
     </div>
 
 
-    <!-- SƠ ĐỒ GHẾ -->
-    <div class="seat-layout-card">
+    <!-- ================================================= -->
+    <!-- LEGEND -->
+    <!-- ================================================= -->
 
-        <h2 class="text-center mb-4">
-            Chọn ghế
-        </h2>
+    <div class="legend">
 
-        <div class="bus">
+        <div class="legend-item">
 
-            <div class="bus-header">
-                🚍 ĐẦU XE
+            <span class="legend-box available"></span>
+
+            <span>Trống</span>
+
+        </div>
+
+        <div class="legend-item">
+
+            <span class="legend-box selected"></span>
+
+            <span>Đang chọn</span>
+
+        </div>
+
+        <div class="legend-item">
+
+            <span class="legend-box booked"></span>
+
+            <span>Đã đặt</span>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- LAYOUT -->
+    <!-- ================================================= -->
+
+    <div class="layout-wrapper">
+
+        <div class="bus-layout">
+
+            <!-- ================================================= -->
+            <!-- DRIVER -->
+            <!-- ================================================= -->
+
+            <div class="front">
+
+                <div class="driver">
+
+                    <span class="steering">
+                        ◉
+                    </span>
+
+                    <span>
+                        Tài xế
+                    </span>
+
+                </div>
+
+                <div class="front-title">
+                    ĐẦU XE
+                </div>
+
             </div>
 
 
-            @{
-                // Chia ghế thành từng hàng 4 ghế
-                var rows = Model
-                    .Select((seat, index) => new { seat, index })
-                    .GroupBy(x => x.index / 4)
-                    .Select(g => g.Select(x => x.seat).ToList())
-                    .ToList();
-            }
+            <!-- ================================================= -->
+            <!-- TITLE -->
+            <!-- ================================================= -->
+
+            <div class="layout-title">
+
+                @vehicleIcon
+                @layoutTitle
+
+            </div>
 
 
-            @foreach (var row in rows)
+            @if (isSleeper)
             {
-                <div class="seat-row">
+                <!-- ================================================= -->
+                <!-- GIƯỜNG NẰM
+                     24 GIƯỜNG
+                     A01-A12
+                     B01-B12
+                -->
+                <!-- ================================================= -->
 
-                    @for (int i = 0; i < 4; i++)
+                <div class="sleeper-layout">
+
+                    <!-- TẦNG DƯỚI -->
+
+                    <div class="floor">
+
+                        <div class="floor-title">
+
+                            🛏️ TẦNG DƯỚI
+
+                        </div>
+
+                        <div class="bed-grid">
+
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                var seatNumber =
+                                    $"A{i:00}";
+
+                                var seat =
+                                    Model.FirstOrDefault(
+                                        s => s.SeatNumber == seatNumber
+                                    );
+
+                                if (seat != null)
+                                {
+                                    <button type="button"
+                                            class="place sleeper-place @(seat.IsBooked ? "booked" : "")"
+                                            data-seat-id="@seat.Id"
+                                            data-seat-number="@seat.SeatNumber"
+                                            data-booked="@seat.IsBooked.ToString().ToLower()"
+                                            @(seat.IsBooked ? "disabled" : null)>
+
+                                        <span class="bed-icon">
+                                            🛏️
+                                        </span>
+
+                                        <span>
+                                            @seat.SeatNumber
+                                        </span>
+
+                                    </button>
+                                }
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TẦNG TRÊN -->
+
+                    <div class="floor">
+
+                        <div class="floor-title">
+
+                            🛏️ TẦNG TRÊN
+
+                        </div>
+
+                        <div class="bed-grid">
+
+                            @for (int i = 1; i <= 12; i++)
+                            {
+                                var seatNumber =
+                                    $"B{i:00}";
+
+                                var seat =
+                                    Model.FirstOrDefault(
+                                        s => s.SeatNumber == seatNumber
+                                    );
+
+                                if (seat != null)
+                                {
+                                    <button type="button"
+                                            class="place sleeper-place @(seat.IsBooked ? "booked" : "")"
+                                            data-seat-id="@seat.Id"
+                                            data-seat-number="@seat.SeatNumber"
+                                            data-booked="@seat.IsBooked.ToString().ToLower()"
+                                            @(seat.IsBooked ? "disabled" : null)>
+
+                                        <span class="bed-icon">
+                                            🛏️
+                                        </span>
+
+                                        <span>
+                                            @seat.SeatNumber
+                                        </span>
+
+                                    </button>
+                                }
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+            else
+            {
+                <!-- ================================================= -->
+                <!-- GHẾ NGỒI 45 CHỖ -->
+                <!-- ================================================= -->
+
+                <div class="seat45-layout">
+
+                    @for (int row = 0; row < 12; row++)
                     {
-                        if (i < row.Count)
-                        {
-                            var seat = row[i];
+                        int seat1 = row * 4 + 1;
+                        int seat2 = row * 4 + 2;
+                        int seat3 = row * 4 + 3;
+                        int seat4 = row * 4 + 4;
 
-                            <button type="button"
-                                    class="seat @(seat.IsBooked ? "booked" : "available")"
-                                    data-seat-id="@seat.Id"
-                                    data-seat-number="@seat.SeatNumber"
-                                    @(seat.IsBooked ? "disabled" : "")>
+                        <div class="seat-row">
 
-                                @seat.SeatNumber
+                            <!-- BÊN TRÁI -->
 
-                            </button>
-                        }
-                        else
-                        {
-                            <div></div>
-                        }
+                            @if (seat1 <= 45)
+                            {
+                                var seatNumber =
+                                    seat1.ToString("00");
 
-                        @if (i == 1)
-                        {
-                            <div class="aisle">
-                                LỐI ĐI
-                            </div>
-                        }
+                                var seat =
+                                    Model.FirstOrDefault(
+                                        s => s.SeatNumber == seatNumber
+                                    );
+
+                                if (seat != null)
+                                {
+                                    <button type="button"
+                                            class="place seat-place @(seat.IsBooked ? "booked" : "")"
+                                            data-seat-id="@seat.Id"
+                                            data-seat-number="@seat.SeatNumber"
+                                            data-booked="@seat.IsBooked.ToString().ToLower()"
+                                            @(seat.IsBooked ? "disabled" : null)>
+
+                                        💺 @seat.SeatNumber
+
+                                    </button>
+                                }
+                            }
+
+
+                            @if (seat2 <= 45)
+                            {
+                                var seatNumber =
+                                    seat2.ToString("00");
+
+                                var seat =
+                                    Model.FirstOrDefault(
+                                        s => s.SeatNumber == seatNumber
+                                    );
+
+                                if (seat != null)
+                                {
+                                    <button type="button"
+                                            class="place seat-place @(seat.IsBooked ? "booked" : "")"
+                                            data-seat-id="@seat.Id"
+                                            data-seat-number="@seat.SeatNumber"
+                                            data-booked="@seat.IsBooked.ToString().ToLower()"
+                                            @(seat.IsBooked ? "disabled" : null)>
+
+                                        💺 @seat.SeatNumber
+
+                                    </button>
+                                }
+                            }
+
+
+                            <!-- LỐI ĐI -->
+
+                            <div class="aisle"></div>
+
+
+                            <!-- BÊN PHẢI -->
+
+                            @if (seat3 <= 45)
+                            {
+                                var seatNumber =
+                                    seat3.ToString("00");
+
+                                var seat =
+                                    Model.FirstOrDefault(
+                                        s => s.SeatNumber == seatNumber
+                                    );
+
+                                if (seat != null)
+                                {
+                                    <button type="button"
+                                            class="place seat-place @(seat.IsBooked ? "booked" : "")"
+                                            data-seat-id="@seat.Id"
+                                            data-seat-number="@seat.SeatNumber"
+                                            data-booked="@seat.IsBooked.ToString().ToLower()"
+                                            @(seat.IsBooked ? "disabled" : null)>
+
+                                        💺 @seat.SeatNumber
+
+                                    </button>
+                                }
+                            }
+
+
+                            @if (seat4 <= 45)
+                            {
+                                var seatNumber =
+                                    seat4.ToString("00");
+
+                                var seat =
+                                    Model.FirstOrDefault(
+                                        s => s.SeatNumber == seatNumber
+                                    );
+
+                                if (seat != null)
+                                {
+                                    <button type="button"
+                                            class="place seat-place @(seat.IsBooked ? "booked" : "")"
+                                            data-seat-id="@seat.Id"
+                                            data-seat-number="@seat.SeatNumber"
+                                            data-booked="@seat.IsBooked.ToString().ToLower()"
+                                            @(seat.IsBooked ? "disabled" : null)>
+
+                                        💺 @seat.SeatNumber
+
+                                    </button>
+                                }
+                            }
+
+                        </div>
                     }
 
                 </div>
             }
 
-        </div>
 
+            <!-- ================================================= -->
+            <!-- BACK -->
+            <!-- ================================================= -->
 
-        <!-- CHÚ THÍCH -->
-        <div class="legend">
+            <div class="back">
 
-            <div class="legend-item">
-                <div class="legend-box legend-available"></div>
-                <span>Còn trống</span>
-            </div>
+                CUỐI XE
 
-            <div class="legend-item">
-                <div class="legend-box legend-selected"></div>
-                <span>Đang chọn</span>
-            </div>
-
-            <div class="legend-item">
-                <div class="legend-box legend-booked"></div>
-                <span>Đã đặt</span>
             </div>
 
         </div>
 
-
-        <!-- THÔNG TIN GHẾ ĐANG CHỌN -->
-        <div class="selected-info">
-
-            <div class="row align-items-center">
-
-                <div class="col-md-8">
-
-                    <div>
-                        <strong>Ghế đã chọn:</strong>
-                    </div>
-
-                    <div id="selectedSeats"
-                         class="selected-seat-list mt-2">
-                        Chưa chọn ghế
-                    </div>
-
-                    <div class="mt-2">
-                        Số lượng:
-                        <strong id="selectedCount">0</strong>
-                    </div>
-
-                    <div class="mt-2">
-                        Tổng tiền:
-                        <strong id="totalPrice">0 đ</strong>
-                    </div>
-
-                </div>
+    </div>
 
 
-                <div class="col-md-4 mt-3 mt-md-0">
+    <!-- ================================================= -->
+    <!-- SELECTION SUMMARY -->
+    <!-- ================================================= -->
 
-                    <button type="button"
-                            id="continueButton"
-                            class="btn btn-primary btn-lg w-100"
-                            disabled>
+    <div class="selection-card">
 
-                        Tiếp tục đặt vé
+        <div>
 
-                    </button>
+            <div class="selection-label">
 
-                </div>
+                @(isSleeper
+                    ? "Giường đã chọn"
+                    : "Ghế đã chọn")
 
             </div>
+
+            <div id="selectedPlaces"
+                 class="selected-places">
+
+                Chưa chọn
+
+            </div>
+
+        </div>
+
+
+        <div class="selection-right">
+
+            <div class="selection-count">
+
+                <span id="selectedCount">
+                    0
+                </span>
+
+                @(isSleeper ? "giường" : "ghế")
+
+            </div>
+
+            <div class="total-price">
+
+                <span>
+                    Tổng:
+                </span>
+
+                <strong id="totalPrice">
+                    0 đ
+                </strong>
+
+            </div>
+
+            <button type="button"
+                    id="continueButton"
+                    class="continue-button"
+                    disabled>
+
+                Tiếp tục
+
+            </button>
 
         </div>
 
@@ -354,12 +609,24 @@
 </div>
 
 
+<!-- ===================================================== -->
+<!-- JAVASCRIPT -->
+<!-- ===================================================== -->
+
 <script>
 
-    const seats = document.querySelectorAll(".seat.available");
+    const pricePerPlace =
+        @price.ToString(
+            System.Globalization.CultureInfo.InvariantCulture
+        );
 
-    const selectedSeatsElement =
-        document.getElementById("selectedSeats");
+    const selectedSeats = new Map();
+
+    const places =
+        document.querySelectorAll(".place:not(.booked)");
+
+    const selectedPlacesElement =
+        document.getElementById("selectedPlaces");
 
     const selectedCountElement =
         document.getElementById("selectedCount");
@@ -371,16 +638,13 @@
         document.getElementById("continueButton");
 
 
-    const pricePerSeat =
-        @((trip?.Price ?? 0).ToString(System.Globalization.CultureInfo.InvariantCulture));
+    // =====================================================
+    // CHỌN / BỎ CHỌN
+    // =====================================================
 
+    places.forEach(place => {
 
-    let selectedSeats = [];
-
-
-    seats.forEach(seat => {
-
-        seat.addEventListener("click", function () {
+        place.addEventListener("click", function () {
 
             const seatId =
                 this.dataset.seatId;
@@ -389,107 +653,1303 @@
                 this.dataset.seatNumber;
 
 
-            const existingIndex =
-                selectedSeats.findIndex(
-                    s => s.id === seatId
-                );
+            // ---------------------------------------------
+            // BỎ CHỌN
+            // ---------------------------------------------
 
+            if (selectedSeats.has(seatId)) {
 
-            if (existingIndex >= 0) {
-
-                // Bỏ chọn
-                selectedSeats.splice(
-                    existingIndex,
-                    1
-                );
+                selectedSeats.delete(seatId);
 
                 this.classList.remove("selected");
-                this.classList.add("available");
 
             }
+
+            // ---------------------------------------------
+            // CHỌN
+            // ---------------------------------------------
+
             else {
 
-                // Chọn ghế
-                selectedSeats.push({
-                    id: seatId,
-                    number: seatNumber
-                });
+                selectedSeats.set(
+                    seatId,
+                    seatNumber
+                );
 
-                this.classList.remove("available");
                 this.classList.add("selected");
 
             }
 
-
-            updateSelectedSeats();
+            updateSummary();
 
         });
 
     });
 
 
-    function updateSelectedSeats() {
+    // =====================================================
+    // UPDATE SUMMARY
+    // =====================================================
 
-        if (selectedSeats.length === 0) {
+    function updateSummary() {
 
-            selectedSeatsElement.textContent =
-                "Chưa chọn ghế";
+        const selected =
+            Array.from(
+                selectedSeats.values()
+            );
 
-            selectedCountElement.textContent =
-                "0";
 
-            totalPriceElement.textContent =
-                "0 đ";
+        const count =
+            selected.length;
 
-            continueButton.disabled = true;
 
-            return;
+        // ---------------------------------------------
+        // DANH SÁCH CHỖ
+        // ---------------------------------------------
+
+        if (count === 0) {
+
+            selectedPlacesElement.innerHTML =
+                "Chưa chọn";
+
+        }
+        else {
+
+            selectedPlacesElement.innerHTML =
+                selected
+                    .map(place =>
+                        `<span class="selected-tag">
+                            ${place}
+                        </span>`
+                    )
+                    .join("");
+
         }
 
 
-        selectedSeatsElement.textContent =
-            selectedSeats
-                .map(s => s.number)
-                .join(", ");
-
+        // ---------------------------------------------
+        // SỐ LƯỢNG
+        // ---------------------------------------------
 
         selectedCountElement.textContent =
-            selectedSeats.length;
+            count;
 
+
+        // ---------------------------------------------
+        // TỔNG TIỀN
+        // ---------------------------------------------
 
         const total =
-            selectedSeats.length * pricePerSeat;
-
+            count * pricePerPlace;
 
         totalPriceElement.textContent =
             total.toLocaleString("vi-VN") + " đ";
 
 
-        continueButton.disabled = false;
+        // ---------------------------------------------
+        // BUTTON
+        // ---------------------------------------------
+
+        continueButton.disabled =
+            count === 0;
 
     }
 
 
-        continueButton.addEventListener("click", function () {
+    // =====================================================
+    // CONTINUE
+    // =====================================================
 
-        if (selectedSeats.length === 0) {
-            return;
+    continueButton.addEventListener(
+        "click",
+        function () {
+
+            if (selectedSeats.size === 0) {
+
+                return;
+
+            }
+
+            const seatIds =
+                Array.from(
+                    selectedSeats.keys()
+                );
+
+
+            const params =
+                new URLSearchParams();
+
+            params.append(
+                "tripId",
+                "@trip?.Id"
+            );
+
+
+            seatIds.forEach(id => {
+
+                params.append(
+                    "seatIds",
+                    id
+                );
+
+            });
+
+
+            window.location.href =
+                "/Bookings/Create?" +
+                params.toString();
+
         }
-
-        const params = new URLSearchParams();
-
-        params.append("tripId", "@trip?.Id");
-
-        selectedSeats.forEach(seat => {
-            params.append("seatIds", seat.id);
-        });
-
-        window.location.href =
-            "/Bookings/Create?" + params.toString();
-
-    });
+    );
 
 </script>
 
-</body>
-</html>
+
+<style>
+
+    /* ===================================================== */
+    /* PAGE */
+    /* ===================================================== */
+
+    .seat-page {
+
+        max-width: 1180px;
+
+        margin: 0 auto;
+
+        padding:
+            28px
+            24px
+            60px;
+
+        color: #172033;
+
+    }
+
+
+    /* ===================================================== */
+    /* HEADER */
+    /* ===================================================== */
+
+    .top-section {
+
+        display: flex;
+
+        justify-content:
+            space-between;
+
+        align-items:
+            flex-start;
+
+        gap: 30px;
+
+        margin-bottom:
+            26px;
+
+    }
+
+
+    .vehicle-badge {
+
+        display:
+            inline-flex;
+
+        align-items:
+            center;
+
+        gap: 7px;
+
+        padding:
+            7px
+            13px;
+
+        background:
+            #edf4ff;
+
+        color:
+            #2563eb;
+
+        border-radius:
+            999px;
+
+        font-size:
+            13px;
+
+        font-weight:
+            800;
+
+        margin-bottom:
+            10px;
+
+    }
+
+
+    h1 {
+
+        margin:
+            0;
+
+        font-size:
+            32px;
+
+        font-weight:
+            800;
+
+        color:
+            #111827;
+
+    }
+
+
+    .route {
+
+        display:
+            flex;
+
+        align-items:
+            center;
+
+        gap:
+            12px;
+
+        margin-top:
+            8px;
+
+        color:
+            #64748b;
+
+        font-size:
+            16px;
+
+    }
+
+
+    .arrow {
+
+        color:
+            #2563eb;
+
+        font-size:
+            20px;
+
+        font-weight:
+            700;
+
+    }
+
+
+    /* ===================================================== */
+    /* PRICE */
+    /* ===================================================== */
+
+    .price-box {
+
+        min-width:
+            180px;
+
+        padding:
+            18px
+            22px;
+
+        background:
+            #f8fafc;
+
+        border:
+            1px solid #e2e8f0;
+
+        border-radius:
+            18px;
+
+        text-align:
+            right;
+
+    }
+
+
+    .price-label {
+
+        color:
+            #64748b;
+
+        font-size:
+            13px;
+
+    }
+
+
+    .price {
+
+        margin-top:
+            4px;
+
+        color:
+            #2563eb;
+
+        font-size:
+            25px;
+
+        font-weight:
+            800;
+
+    }
+
+
+    /* ===================================================== */
+    /* TRIP INFO */
+    /* ===================================================== */
+
+    .trip-info {
+
+        display:
+            grid;
+
+        grid-template-columns:
+            repeat(4, 1fr);
+
+        gap:
+            14px;
+
+        padding:
+            18px;
+
+        border:
+            1px solid #e2e8f0;
+
+        border-radius:
+            18px;
+
+        background:
+            #ffffff;
+
+        margin-bottom:
+            24px;
+
+    }
+
+
+    .trip-info-item {
+
+        display:
+            flex;
+
+        align-items:
+            center;
+
+        gap:
+            12px;
+
+    }
+
+
+    .info-icon {
+
+        width:
+            42px;
+
+        height:
+            42px;
+
+        display:
+            flex;
+
+        align-items:
+            center;
+
+        justify-content:
+            center;
+
+        background:
+            #edf4ff;
+
+        border-radius:
+            12px;
+
+        font-size:
+            19px;
+
+        flex-shrink:
+            0;
+
+    }
+
+
+    .label {
+
+        color:
+            #94a3b8;
+
+        font-size:
+            12px;
+
+        margin-bottom:
+            4px;
+
+    }
+
+
+    .trip-info strong {
+
+        font-size:
+            14px;
+
+        color:
+            #172033;
+
+    }
+
+
+    /* ===================================================== */
+    /* LEGEND */
+    /* ===================================================== */
+
+    .legend {
+
+        display:
+            flex;
+
+        justify-content:
+            center;
+
+        gap:
+            28px;
+
+        margin-bottom:
+            20px;
+
+    }
+
+
+    .legend-item {
+
+        display:
+            flex;
+
+        align-items:
+            center;
+
+        gap:
+            7px;
+
+        color:
+            #64748b;
+
+        font-size:
+            13px;
+
+    }
+
+
+    .legend-box {
+
+        width:
+            22px;
+
+        height:
+            22px;
+
+        border-radius:
+            7px;
+
+        border:
+            1px solid #cbd5e1;
+
+        display:
+            inline-block;
+
+    }
+
+
+    .legend-box.available {
+
+        background:
+            #ffffff;
+
+    }
+
+
+    .legend-box.selected {
+
+        background:
+            #2563eb;
+
+        border-color:
+            #2563eb;
+
+    }
+
+
+    .legend-box.booked {
+
+        background:
+            #e2e8f0;
+
+        border-color:
+            #cbd5e1;
+
+    }
+
+
+    /* ===================================================== */
+    /* BUS */
+    /* ===================================================== */
+
+    .layout-wrapper {
+
+        display:
+            flex;
+
+        justify-content:
+            center;
+
+    }
+
+
+    .bus-layout {
+
+        width:
+            600px;
+
+        min-height:
+            650px;
+
+        padding:
+            28px;
+
+        border:
+            2px solid #cbd5e1;
+
+        border-radius:
+            34px;
+
+        background:
+            #f8fafc;
+
+        box-shadow:
+            0 12px 35px
+            rgba(
+                15,
+                23,
+                42,
+                0.08
+            );
+
+    }
+
+
+    /* ===================================================== */
+    /* FRONT */
+    /* ===================================================== */
+
+    .front {
+
+        display:
+            flex;
+
+        align-items:
+            center;
+
+        justify-content:
+            space-between;
+
+        padding-bottom:
+            16px;
+
+        border-bottom:
+            2px dashed #cbd5e1;
+
+        margin-bottom:
+            25px;
+
+    }
+
+
+    .driver {
+
+        display:
+            flex;
+
+        flex-direction:
+            column;
+
+        align-items:
+            center;
+
+        gap:
+            3px;
+
+        color:
+            #64748b;
+
+        font-size:
+            11px;
+
+    }
+
+
+    .steering {
+
+        font-size:
+            27px;
+
+        color:
+            #64748b;
+
+    }
+
+
+    .front-title {
+
+        color:
+            #94a3b8;
+
+        font-size:
+            13px;
+
+        font-weight:
+            800;
+
+        letter-spacing:
+            1px;
+
+    }
+
+
+    /* ===================================================== */
+    /* LAYOUT TITLE */
+    /* ===================================================== */
+
+    .layout-title {
+
+        text-align:
+            center;
+
+        font-size:
+            17px;
+
+        font-weight:
+            800;
+
+        color:
+            #172033;
+
+        margin-bottom:
+            22px;
+
+    }
+
+
+    /* ===================================================== */
+    /* SLEEPER */
+    /* ===================================================== */
+
+    .sleeper-layout {
+
+        display:
+            flex;
+
+        flex-direction:
+            column;
+
+        gap:
+            26px;
+
+    }
+
+
+    .floor {
+
+        padding:
+            18px;
+
+        background:
+            #ffffff;
+
+        border:
+            1px solid #dbe3ef;
+
+        border-radius:
+            18px;
+
+    }
+
+
+    .floor-title {
+
+        text-align:
+            center;
+
+        margin-bottom:
+            16px;
+
+        font-size:
+            14px;
+
+        font-weight:
+            800;
+
+        color:
+            #475569;
+
+    }
+
+
+    .bed-grid {
+
+        display:
+            grid;
+
+        grid-template-columns:
+            repeat(4, 1fr);
+
+        gap:
+            10px;
+
+    }
+
+
+    /* ===================================================== */
+    /* PLACES */
+    /* ===================================================== */
+
+    .place {
+
+        border:
+            1px solid #cbd5e1;
+
+        background:
+            #ffffff;
+
+        color:
+            #475569;
+
+        border-radius:
+            11px;
+
+        cursor:
+            pointer;
+
+        transition:
+            0.15s ease;
+
+        font-weight:
+            700;
+
+    }
+
+
+    .place:hover:not(:disabled) {
+
+        border-color:
+            #2563eb;
+
+        transform:
+            translateY(-1px);
+
+    }
+
+
+    .place.selected {
+
+        background:
+            #2563eb;
+
+        border-color:
+            #2563eb;
+
+        color:
+            white;
+
+        box-shadow:
+            0 5px 14px
+            rgba(
+                37,
+                99,
+                235,
+                0.25
+            );
+
+    }
+
+
+    .place.booked {
+
+        background:
+            #e2e8f0;
+
+        border-color:
+            #cbd5e1;
+
+        color:
+            #94a3b8;
+
+        cursor:
+            not-allowed;
+
+    }
+
+
+    .sleeper-place {
+
+        min-height:
+            65px;
+
+        display:
+            flex;
+
+        flex-direction:
+            column;
+
+        align-items:
+            center;
+
+        justify-content:
+            center;
+
+        gap:
+            3px;
+
+        font-size:
+            12px;
+
+    }
+
+
+    .bed-icon {
+
+        font-size:
+            20px;
+
+    }
+
+
+    /* ===================================================== */
+    /* SEAT 45 */
+    /* ===================================================== */
+
+    .seat45-layout {
+
+        display:
+            flex;
+
+        flex-direction:
+            column;
+
+        gap:
+            9px;
+
+        padding:
+            5px
+            10px;
+
+    }
+
+
+    .seat-row {
+
+        display:
+            grid;
+
+        grid-template-columns:
+            1fr 1fr 32px 1fr 1fr;
+
+        gap:
+            8px;
+
+        align-items:
+            center;
+
+    }
+
+
+    .seat-place {
+
+        min-height:
+            42px;
+
+        font-size:
+            12px;
+
+    }
+
+
+    .aisle {
+
+        height:
+            1px;
+
+    }
+
+
+    /* ===================================================== */
+    /* BACK */
+    /* ===================================================== */
+
+    .back {
+
+        text-align:
+            center;
+
+        padding-top:
+            22px;
+
+        margin-top:
+            25px;
+
+        border-top:
+            2px dashed #cbd5e1;
+
+        color:
+            #94a3b8;
+
+        font-size:
+            13px;
+
+        font-weight:
+            800;
+
+        letter-spacing:
+            1px;
+
+    }
+
+
+    /* ===================================================== */
+    /* SELECTION */
+    /* ===================================================== */
+
+    .selection-card {
+
+        margin-top:
+            25px;
+
+        padding:
+            20px 24px;
+
+        display:
+            flex;
+
+        justify-content:
+            space-between;
+
+        align-items:
+            center;
+
+        gap:
+            25px;
+
+        background:
+            white;
+
+        border:
+            1px solid #e2e8f0;
+
+        border-radius:
+            18px;
+
+        box-shadow:
+            0 8px 25px
+            rgba(
+                15,
+                23,
+                42,
+                0.05
+            );
+
+    }
+
+
+    .selection-label {
+
+        color:
+            #64748b;
+
+        font-size:
+            13px;
+
+        margin-bottom:
+            8px;
+
+    }
+
+
+    .selected-places {
+
+        min-height:
+            28px;
+
+        display:
+            flex;
+
+        flex-wrap:
+            wrap;
+
+        gap:
+            6px;
+
+        color:
+            #94a3b8;
+
+        font-size:
+            13px;
+
+    }
+
+
+    .selected-tag {
+
+        display:
+            inline-flex;
+
+        padding:
+            5px 9px;
+
+        background:
+            #edf4ff;
+
+        color:
+            #2563eb;
+
+        border-radius:
+            7px;
+
+        font-weight:
+            700;
+
+    }
+
+
+    .selection-right {
+
+        display:
+            flex;
+
+        align-items:
+            center;
+
+        gap:
+            18px;
+
+    }
+
+
+    .selection-count {
+
+        color:
+            #475569;
+
+        font-size:
+            14px;
+
+        font-weight:
+            700;
+
+    }
+
+
+    .total-price {
+
+        display:
+            flex;
+
+        flex-direction:
+            column;
+
+        align-items:
+            flex-end;
+
+    }
+
+
+    .total-price span {
+
+        color:
+            #64748b;
+
+        font-size:
+            12px;
+
+    }
+
+
+    .total-price strong {
+
+        color:
+            #2563eb;
+
+        font-size:
+            20px;
+
+    }
+
+
+    /* ===================================================== */
+    /* CONTINUE */
+    /* ===================================================== */
+
+    .continue-button {
+
+        min-width:
+            140px;
+
+        min-height:
+            48px;
+
+        padding:
+            0 18px;
+
+        border:
+            none;
+
+        border-radius:
+            12px;
+
+        background:
+            #2563eb;
+
+        color:
+            white;
+
+        font-size:
+            14px;
+
+        font-weight:
+            800;
+
+        cursor:
+            pointer;
+
+    }
+
+
+    .continue-button:hover:not(:disabled) {
+
+        background:
+            #1d4ed8;
+
+    }
+
+
+    .continue-button:disabled {
+
+        background:
+            #cbd5e1;
+
+        cursor:
+            not-allowed;
+
+    }
+
+
+    /* ===================================================== */
+    /* RESPONSIVE */
+    /* ===================================================== */
+
+    @@media (max-width: 900px) {
+
+        .trip-info {
+
+            grid-template-columns:
+                1fr 1fr;
+
+        }
+
+        .top-section {
+
+            flex-direction:
+                column;
+
+        }
+
+        .price-box {
+
+            width:
+                100%;
+
+            text-align:
+                left;
+
+        }
+
+        .selection-card {
+
+            flex-direction:
+                column;
+
+            align-items:
+                stretch;
+
+        }
+
+        .selection-right {
+
+            justify-content:
+                space-between;
+
+        }
+
+    }
+
+
+    @@media (max-width: 650px) {
+
+        .seat-page {
+
+            padding:
+                20px 12px 40px;
+
+        }
+
+        .trip-info {
+
+            grid-template-columns:
+                1fr;
+
+        }
+
+        .bus-layout {
+
+            width:
+                100%;
+
+            padding:
+                16px;
+
+            border-radius:
+                25px;
+
+        }
+
+        .bed-grid {
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+        }
+
+        .seat-row {
+
+            grid-template-columns:
+                1fr 1fr 10px 1fr 1fr;
+
+            gap:
+                4px;
+
+        }
+
+        .seat-place {
+
+            font-size:
+                10px;
+
+        }
+
+        .selection-right {
+
+            flex-wrap:
+                wrap;
+
+        }
+
+    }
+
+</style>

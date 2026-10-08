@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\GoBus\\Gobus\\GoBus.csproj": {}
+    "D:\\GoBus\\GoBus\\GoBus.csproj": {}
   },
   "projects": {
-    "D:\\GoBus\\Gobus\\GoBus.csproj": {
+    "D:\\GoBus\\GoBus\\GoBus.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\GoBus\\Gobus\\GoBus.csproj",
+        "projectUniqueName": "D:\\GoBus\\GoBus\\GoBus.csproj",
         "projectName": "GoBus",
-        "projectPath": "D:\\GoBus\\Gobus\\GoBus.csproj",
+        "projectPath": "D:\\GoBus\\GoBus\\GoBus.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "D:\\GoBus\\Gobus\\obj\\",
+        "outputPath": "D:\\GoBus\\GoBus\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

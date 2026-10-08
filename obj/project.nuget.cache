@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ScmJVeQ+YLY=",
+  "dgSpecHash": "6c3/8I8eYNM=",
   "success": true,
-  "projectFilePath": "D:\\GoBus\\Gobus\\GoBus.csproj",
+  "projectFilePath": "D:\\GoBus\\GoBus\\GoBus.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\azure.core\\1.50.0\\azure.core.1.50.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\azure.identity\\1.17.1\\azure.identity.1.17.1.nupkg.sha512",

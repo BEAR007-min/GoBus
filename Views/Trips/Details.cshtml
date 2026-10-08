@@ -2,167 +2,289 @@
 
 @{
     ViewData["Title"] = "Chi tiết chuyến xe";
+
+    bool isSleeper = Model.Bus?.LayoutType == "Sleeper24";
+
+    string vehicleName = isSleeper
+        ? "Giường nằm 24 chỗ"
+        : "Ghế ngồi 45 chỗ";
+
+    string vehicleIcon = isSleeper
+        ? "🛏️"
+        : "💺";
+
+    string chooseText = isSleeper
+        ? "🛏️ Chọn giường"
+        : "💺 Chọn ghế";
+
+    string totalText = isSleeper
+        ? "24 giường"
+        : "45 ghế";
+
+    string availableText = isSleeper
+        ? $"{Math.Min(Model.AvailableSeats, 24)} / 24"
+        : $"{Math.Min(Model.AvailableSeats, 45)} / 45";
+
+    string remainingLabel = isSleeper
+        ? "Giường còn trống"
+        : "Ghế còn trống";
+
+    string totalLabel = isSleeper
+        ? "Tổng số giường"
+        : "Tổng số ghế";
+
+    string layoutTitle = isSleeper
+        ? "Sơ đồ 24 giường"
+        : "Sơ đồ 45 ghế";
+
+    string routeDeparture = Model.Route?.Departure ?? "Chưa xác định";
+    string routeDestination = Model.Route?.Destination ?? "Chưa xác định";
+
+    string companyName = Model.BusCompany?.Name ?? "GoBus";
+
+    string busLicensePlate = Model.Bus?.LicensePlate ?? "Chưa cập nhật";
+
+    string busType = Model.Bus?.BusType ?? vehicleName;
+
+    string departureDate = Model.DepartureTime.ToString("dd/MM/yyyy");
+    string departureTime = Model.DepartureTime.ToString("HH:mm");
+
+    string arrivalDate = Model.ArrivalTime.ToString("dd/MM/yyyy");
+    string arrivalTime = Model.ArrivalTime.ToString("HH:mm");
+
+    string durationText;
+
+    var duration = Model.ArrivalTime - Model.DepartureTime;
+
+    if (duration.TotalMinutes > 0)
+    {
+        int totalMinutes = (int)duration.TotalMinutes;
+        int hours = totalMinutes / 60;
+        int minutes = totalMinutes % 60;
+
+        durationText = minutes > 0
+            ? $"{hours} giờ {minutes} phút"
+            : $"{hours} giờ";
+    }
+    else
+    {
+        durationText = "Đang cập nhật";
+    }
 }
 
-<div class="container py-5">
+<div class="trip-details-page">
 
-    <div class="mb-4">
-        <a asp-controller="Trips"
-           asp-action="Index"
-           class="btn btn-outline-secondary">
+    <!-- ============================= -->
+    <!-- HEADER -->
+    <!-- ============================= -->
 
-            ← Quay lại danh sách chuyến
+    <div class="page-header">
 
-        </a>
+        <div class="header-left">
+
+            <a asp-controller="Trips"
+               asp-action="Index"
+               class="back-link">
+
+                ← Quay lại danh sách chuyến
+
+            </a>
+
+            <div class="title-row">
+
+                <div class="vehicle-badge">
+                    @vehicleIcon
+                </div>
+
+                <div>
+
+                    <div class="vehicle-type-badge">
+                        @vehicleIcon
+                        @(isSleeper ? "XE GIƯỜNG NẰM" : "XE GHẾ NGỒI")
+                    </div>
+
+                    <h1>Chi tiết chuyến xe</h1>
+
+                    <div class="route-title">
+
+                        <span>
+                            @routeDeparture
+                        </span>
+
+                        <span class="route-arrow">
+                            →
+                        </span>
+
+                        <span>
+                            @routeDestination
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="price-box">
+
+            <div class="price-label">
+                Giá vé
+            </div>
+
+            <div class="price-value">
+                @Model.Price.ToString("N0") đ
+            </div>
+
+            <div class="price-note">
+                / người
+            </div>
+
+        </div>
+
     </div>
 
 
-    <div class="row g-4">
+    <!-- ============================= -->
+    <!-- MAIN CONTENT -->
+    <!-- ============================= -->
+
+    <div class="content-grid">
+
+        <!-- ============================= -->
+        <!-- LEFT -->
+        <!-- ============================= -->
+
+        <div class="main-column">
+
+            <!-- HÀNH TRÌNH -->
+
+            <section class="card journey-card">
+
+                <div class="section-title">
+                    🗺️ Hành trình
+                </div>
+
+                <div class="journey">
+
+                    <!-- DEPARTURE -->
+
+                    <div class="journey-point">
+
+                        <div class="time">
+                            @departureTime
+                        </div>
+
+                        <div class="location">
+                            @routeDeparture
+                        </div>
+
+                        <div class="date">
+                            @departureDate
+                        </div>
+
+                    </div>
 
 
-        <!-- =============================== -->
-        <!-- THÔNG TIN CHUYẾN XE -->
-        <!-- =============================== -->
+                    <!-- LINE -->
 
-        <div class="col-lg-8">
+                    <div class="journey-line">
 
-            <div class="card shadow-sm">
+                        <div class="duration">
 
-                <div class="card-body p-4">
+                            🕘 @durationText
 
-                    <h2 class="mb-4">
-                        Chi tiết chuyến xe
-                    </h2>
+                        </div>
 
+                        <div class="line">
 
-                    <!-- TUYẾN XE -->
+                            <span class="line-dot"></span>
 
-                    <div class="mb-4">
-
-                        <h4>
-
-                            @Model.Route?.Departure
-
-                            <span class="mx-2">
+                            <span class="line-arrow">
                                 →
                             </span>
 
-                            @Model.Route?.Destination
-
-                        </h4>
+                        </div>
 
                     </div>
 
 
-                    <!-- THÔNG TIN -->
+                    <!-- ARRIVAL -->
 
-                    <div class="row g-4">
+                    <div class="journey-point arrival">
+
+                        <div class="time">
+                            @arrivalTime
+                        </div>
+
+                        <div class="location">
+                            @routeDestination
+                        </div>
+
+                        <div class="date">
+                            @arrivalDate
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
 
 
-                        <div class="col-md-6">
+            <!-- ============================= -->
+            <!-- THÔNG TIN XE -->
+            <!-- ============================= -->
 
-                            <div class="border rounded p-3">
+            <section class="card">
 
-                                <div class="text-muted">
-                                    Nhà xe
-                                </div>
+                <div class="section-title">
+                    🚌 Thông tin xe
+                </div>
 
-                                <strong>
-                                    @Model.BusCompany?.Name
-                                </strong>
+                <div class="info-grid">
 
+                    <!-- NHÀ XE -->
+
+                    <div class="info-item">
+
+                        <div class="info-icon">
+                            🏢
+                        </div>
+
+                        <div>
+
+                            <div class="info-label">
+                                Nhà xe
+                            </div>
+
+                            <div class="info-value">
+                                @companyName
                             </div>
 
                         </div>
 
+                    </div>
 
-                        <div class="col-md-6">
 
-                            <div class="border rounded p-3">
+                    <!-- LOẠI XE -->
 
-                                <div class="text-muted">
-                                    Loại xe
-                                </div>
+                    <div class="info-item">
 
-                                <strong>
-                                    @Model.Bus?.BusType
-                                </strong>
-
-                            </div>
-
+                        <div class="info-icon">
+                            @vehicleIcon
                         </div>
 
+                        <div>
 
-                        <div class="col-md-6">
-
-                            <div class="border rounded p-3">
-
-                                <div class="text-muted">
-                                    Biển số xe
-                                </div>
-
-                                <strong>
-                                    @Model.Bus?.LicensePlate
-                                </strong>
-
+                            <div class="info-label">
+                                Loại xe
                             </div>
 
-                        </div>
+                            <div class="info-value">
 
-
-                        <div class="col-md-6">
-
-                            <div class="border rounded p-3">
-
-                                <div class="text-muted">
-                                    Số ghế
-                                </div>
-
-                                <strong>
-                                    @Model.Bus?.TotalSeats ghế
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="col-md-6">
-
-                            <div class="border rounded p-3">
-
-                                <div class="text-muted">
-                                    Giờ khởi hành
-                                </div>
-
-                                <strong>
-                                    @Model.DepartureTime.ToString("HH:mm")
-                                </strong>
-
-                                <div>
-                                    @Model.DepartureTime.ToString("dd/MM/yyyy")
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="col-md-6">
-
-                            <div class="border rounded p-3">
-
-                                <div class="text-muted">
-                                    Giờ đến
-                                </div>
-
-                                <strong>
-                                    @Model.ArrivalTime.ToString("HH:mm")
-                                </strong>
-
-                                <div>
-                                    @Model.ArrivalTime.ToString("dd/MM/yyyy")
-                                </div>
+                                @vehicleName
 
                             </div>
 
@@ -171,50 +293,50 @@
                     </div>
 
 
-                    <!-- =============================== -->
-                    <!-- TUYẾN ĐƯỜNG -->
-                    <!-- =============================== -->
+                    <!-- BIỂN SỐ -->
 
-                    <hr class="my-4">
+                    <div class="info-item">
 
+                        <div class="info-icon">
+                            🚍
+                        </div>
 
-                    <h5>
-                        Thông tin tuyến đường
-                    </h5>
+                        <div>
 
-                    <div class="row mt-3">
+                            <div class="info-label">
+                                Biển số xe
+                            </div>
 
-                        <div class="col-md-6">
+                            <div class="info-value">
 
-                            <p>
-                                <strong>Khoảng cách:</strong>
+                                @busLicensePlate
 
-                                @Model.Route?.Distance km
-
-                            </p>
+                            </div>
 
                         </div>
 
+                    </div>
 
-                        <div class="col-md-6">
 
-                            <p>
-                                <strong>
-                                    Thời gian dự kiến:
-                                </strong>
+                    <!-- TỔNG SỐ -->
 
-                                @if (Model.Route != null)
-                                {
-                                    var hours =
-                                        Model.Route.EstimatedDuration / 60;
+                    <div class="info-item">
 
-                                    var minutes =
-                                        Model.Route.EstimatedDuration % 60;
+                        <div class="info-icon">
+                            @vehicleIcon
+                        </div>
 
-                                    @($"{hours} giờ {minutes} phút")
-                                }
+                        <div>
 
-                            </p>
+                            <div class="info-label">
+                                @totalLabel
+                            </div>
+
+                            <div class="info-value">
+
+                                @totalText
+
+                            </div>
 
                         </div>
 
@@ -222,88 +344,849 @@
 
                 </div>
 
-            </div>
+            </section>
+
+
+            <!-- ============================= -->
+            <!-- THÔNG TIN TUYẾN -->
+            <!-- ============================= -->
+
+            <section class="card route-card">
+
+                <div class="section-title">
+                    🗺️ Thông tin tuyến đường
+                </div>
+
+                <div class="route-info-grid">
+
+                    <div>
+
+                        <span class="route-info-label">
+                            Khoảng cách
+                        </span>
+
+                        <strong>
+                            @Model.Route?.Distance.ToString("N0") km
+                        </strong>
+
+                    </div>
+
+                    <div>
+
+                        <span class="route-info-label">
+                            Thời gian dự kiến
+                        </span>
+
+                        <strong>
+                            @durationText
+                        </strong>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ============================= -->
+            <!-- THÔNG TIN SƠ ĐỒ -->
+            <!-- ============================= -->
+
+            <section class="card layout-info-card">
+
+                <div class="section-title">
+                    @vehicleIcon
+                    @layoutTitle
+                </div>
+
+                @if (isSleeper)
+                {
+                    <div class="layout-description">
+
+                        <div class="layout-icon">
+                            🛏️
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Xe giường nằm 24 chỗ
+                            </strong>
+
+                            <p>
+                                Sơ đồ gồm 2 tầng, mỗi tầng 12 giường.
+                                Bạn có thể chọn nhiều giường trong sơ đồ.
+                            </p>
+
+                            <div class="layout-count">
+
+                                <span>
+                                    🛏️ Tầng dưới: 12 giường
+                                </span>
+
+                                <span>
+                                    🛏️ Tầng trên: 12 giường
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="layout-description">
+
+                        <div class="layout-icon">
+                            💺
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Xe ghế ngồi 45 chỗ
+                            </strong>
+
+                            <p>
+                                Sơ đồ ghế ngồi gồm 45 vị trí.
+                                Bạn có thể chọn nhiều ghế trong sơ đồ.
+                            </p>
+
+                            <div class="layout-count">
+
+                                <span>
+                                    💺 Tổng cộng: 45 ghế
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+
+            </section>
 
         </div>
 
 
-        <!-- =============================== -->
-        <!-- ĐẶT VÉ -->
-        <!-- =============================== -->
+        <!-- ============================= -->
+        <!-- RIGHT SIDEBAR -->
+        <!-- ============================= -->
 
-        <div class="col-lg-4">
+        <aside class="sidebar">
 
-            <div class="card shadow-sm">
+            <div class="booking-card">
 
-                <div class="card-body p-4">
+                <!-- HEADER -->
 
-                    <h4 class="mb-4">
-                        Đặt vé
-                    </h4>
+                <div class="booking-header">
 
+                    <div>
 
-                    <div class="mb-3">
+                        <div class="company-name">
+                            🚌 @companyName
+                        </div>
 
-                        <div class="text-muted">
+                        <div class="vehicle-name">
+                            @busType
+                        </div>
+
+                    </div>
+
+                    <div class="sidebar-price">
+
+                        <div>
                             Giá vé
                         </div>
 
-                        <h3 class="text-primary">
-
-                            @Model.Price.ToString("N0")
-                            VNĐ
-
-                        </h3>
+                        <strong>
+                            @Model.Price.ToString("N0") đ
+                        </strong>
 
                     </div>
 
+                </div>
 
-                    <div class="mb-4">
 
-                        <div class="text-muted">
-                            Ghế còn trống
-                        </div>
+                <!-- DIVIDER -->
 
-                        <h5>
+                <div class="divider"></div>
 
-                            @Model.AvailableSeats
 
-                            /
-                            
-                            @Model.Bus?.TotalSeats
+                <!-- PRICE -->
 
-                            ghế
+                <div class="booking-price">
 
-                        </h5>
+                    <div class="booking-price-label">
+                        Giá vé / người
+                    </div>
+
+                    <div class="booking-price-value">
+                        @Model.Price.ToString("N0") VNĐ
+                    </div>
+
+                </div>
+
+
+                <!-- AVAILABLE -->
+
+                <div class="availability-box">
+
+                    <div class="availability-left">
+
+                        <span class="availability-icon">
+                            @vehicleIcon
+                        </span>
+
+                        <span>
+                            @remainingLabel
+                        </span>
 
                     </div>
 
+                    <strong>
+                        @availableText
+                    </strong>
 
-                    @if (Model.AvailableSeats > 0)
-                    {
-                       <a asp-controller="Seats"
-                        asp-action="Index"
-                        asp-route-tripId="@Model.Id"
-                        class="btn btn-primary w-100">
-                            Chọn ghế
-                        </a>
-                    }
-                    else
-                    {
-                        <button class="btn btn-secondary w-100"
-                                disabled>
+                </div>
 
-                            Hết ghế
 
-                        </button>
-                    }
+                <!-- CHOOSE -->
+
+                <a asp-controller="Seats"
+                   asp-action="Index"
+                   asp-route-tripId="@Model.Id"
+                   class="choose-button">
+
+                    <span class="choose-icon">
+                        @vehicleIcon
+                    </span>
+
+                    <span>
+                        @chooseText
+                    </span>
+
+                </a>
+
+
+                <div class="booking-note">
+
+                    Bạn có thể chọn nhiều
+                    @(isSleeper ? "giường" : "ghế")
+                    trong sơ đồ.
 
                 </div>
 
             </div>
 
-        </div>
+        </aside>
 
     </div>
 
 </div>
+
+
+<style>
+
+    /* ===================================== */
+    /* GLOBAL */
+    /* ===================================== */
+
+    .trip-details-page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 30px 24px 60px;
+        color: #172033;
+    }
+
+
+    /* ===================================== */
+    /* HEADER */
+    /* ===================================== */
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 30px;
+        margin-bottom: 26px;
+    }
+
+    .header-left {
+        flex: 1;
+    }
+
+    .back-link {
+        display: inline-block;
+        margin-bottom: 18px;
+        color: #356ae6;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .back-link:hover {
+        text-decoration: underline;
+    }
+
+    .title-row {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .vehicle-badge {
+        width: 58px;
+        height: 58px;
+        border-radius: 16px;
+        background: #edf4ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        flex-shrink: 0;
+    }
+
+    .vehicle-type-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 13px;
+        background: #edf4ff;
+        color: #2563eb;
+        border-radius: 999px;
+        font-size: 13px;
+        font-weight: 800;
+        margin-bottom: 8px;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 800;
+        color: #111827;
+    }
+
+    .route-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 8px;
+        font-size: 16px;
+        color: #667085;
+    }
+
+    .route-arrow {
+        color: #2563eb;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+
+    /* ===================================== */
+    /* PRICE */
+    /* ===================================== */
+
+    .price-box {
+        min-width: 180px;
+        padding: 20px 24px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        text-align: right;
+    }
+
+    .price-label {
+        color: #64748b;
+        font-size: 13px;
+        margin-bottom: 6px;
+    }
+
+    .price-value {
+        color: #2563eb;
+        font-size: 25px;
+        font-weight: 800;
+    }
+
+    .price-note {
+        color: #94a3b8;
+        font-size: 12px;
+        margin-top: 2px;
+    }
+
+
+    /* ===================================== */
+    /* GRID */
+    /* ===================================== */
+
+    .content-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 360px;
+        gap: 24px;
+        align-items: start;
+    }
+
+    .main-column {
+        min-width: 0;
+    }
+
+
+    /* ===================================== */
+    /* CARD */
+    /* ===================================== */
+
+    .card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 24px;
+        margin-bottom: 20px;
+        box-shadow: 0 5px 20px rgba(15, 23, 42, 0.035);
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 18px;
+        font-weight: 800;
+        color: #172033;
+        margin-bottom: 22px;
+    }
+
+
+    /* ===================================== */
+    /* JOURNEY */
+    /* ===================================== */
+
+    .journey {
+        display: grid;
+        grid-template-columns: 160px 1fr 160px;
+        align-items: center;
+        gap: 18px;
+    }
+
+    .journey-point {
+        text-align: center;
+    }
+
+    .journey-point .time {
+        font-size: 31px;
+        font-weight: 800;
+        color: #111827;
+    }
+
+    .journey-point .location {
+        margin-top: 4px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #334155;
+    }
+
+    .journey-point .date {
+        margin-top: 5px;
+        font-size: 13px;
+        color: #94a3b8;
+    }
+
+    .journey-line {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .duration {
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .line {
+        width: 100%;
+        height: 2px;
+        background: #dbe3ef;
+        position: relative;
+    }
+
+    .line-dot {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #2563eb;
+        left: -1px;
+        top: -5px;
+    }
+
+    .line-arrow {
+        position: absolute;
+        right: -3px;
+        top: -13px;
+        font-size: 20px;
+        color: #2563eb;
+    }
+
+
+    /* ===================================== */
+    /* INFO */
+    /* ===================================== */
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 17px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+    }
+
+    .info-icon {
+        width: 44px;
+        height: 44px;
+        flex-shrink: 0;
+        border-radius: 12px;
+        background: #edf4ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+    }
+
+    .info-label {
+        color: #94a3b8;
+        font-size: 12px;
+        margin-bottom: 4px;
+    }
+
+    .info-value {
+        color: #172033;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+
+    /* ===================================== */
+    /* ROUTE INFO */
+    /* ===================================== */
+
+    .route-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+    }
+
+    .route-info-grid > div {
+        padding: 16px;
+        background: #f8fafc;
+        border-radius: 13px;
+    }
+
+    .route-info-label {
+        display: block;
+        color: #64748b;
+        font-size: 13px;
+        margin-bottom: 7px;
+    }
+
+    .route-info-grid strong {
+        color: #172033;
+        font-size: 15px;
+    }
+
+
+    /* ===================================== */
+    /* LAYOUT INFO */
+    /* ===================================== */
+
+    .layout-description {
+        display: flex;
+        gap: 18px;
+        padding: 20px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 15px;
+    }
+
+    .layout-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 14px;
+        background: #edf4ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 25px;
+        flex-shrink: 0;
+    }
+
+    .layout-description strong {
+        font-size: 16px;
+        color: #172033;
+    }
+
+    .layout-description p {
+        margin: 7px 0 13px;
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .layout-count {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .layout-count span {
+        padding: 7px 11px;
+        background: white;
+        border: 1px solid #dbe3ef;
+        border-radius: 9px;
+        font-size: 12px;
+        color: #475569;
+        font-weight: 600;
+    }
+
+
+    /* ===================================== */
+    /* SIDEBAR */
+    /* ===================================== */
+
+    .sidebar {
+        position: sticky;
+        top: 20px;
+    }
+
+    .booking-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 22px;
+        box-shadow: 0 8px 30px rgba(15, 23, 42, 0.06);
+    }
+
+    .booking-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+    }
+
+    .company-name {
+        font-size: 17px;
+        font-weight: 800;
+        color: #172033;
+    }
+
+    .vehicle-name {
+        margin-top: 5px;
+        font-size: 13px;
+        color: #64748b;
+    }
+
+    .sidebar-price {
+        text-align: right;
+    }
+
+    .sidebar-price > div {
+        color: #64748b;
+        font-size: 12px;
+    }
+
+    .sidebar-price strong {
+        display: block;
+        margin-top: 4px;
+        color: #2563eb;
+        font-size: 22px;
+    }
+
+    .divider {
+        height: 1px;
+        background: #e2e8f0;
+        margin: 20px 0;
+    }
+
+
+    /* ===================================== */
+    /* BOOKING PRICE */
+    /* ===================================== */
+
+    .booking-price-label {
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .booking-price-value {
+        margin-top: 5px;
+        color: #2563eb;
+        font-size: 27px;
+        font-weight: 800;
+    }
+
+
+    /* ===================================== */
+    /* AVAILABILITY */
+    /* ===================================== */
+
+    .availability-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        padding: 14px;
+        background: #f8fafc;
+        border-radius: 13px;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    .availability-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .availability-icon {
+        font-size: 17px;
+    }
+
+    .availability-box strong {
+        color: #059669;
+        font-size: 14px;
+    }
+
+
+    /* ===================================== */
+    /* CHOOSE BUTTON */
+    /* ===================================== */
+
+    .choose-button {
+        width: 100%;
+        min-height: 54px;
+        margin-top: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+
+        background: #1677ff;
+        color: white;
+
+        border: 0;
+        border-radius: 14px;
+
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 800;
+
+        box-shadow: 0 6px 16px rgba(22, 119, 255, 0.22);
+
+        transition:
+            transform 0.15s ease,
+            box-shadow 0.15s ease,
+            background 0.15s ease;
+    }
+
+    .choose-button:hover {
+        background: #0d68e8;
+        color: white;
+        text-decoration: none;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(22, 119, 255, 0.28);
+    }
+
+    .choose-icon {
+        font-size: 19px;
+    }
+
+    .booking-note {
+        text-align: center;
+        margin-top: 13px;
+        color: #94a3b8;
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+
+    /* ===================================== */
+    /* RESPONSIVE */
+    /* ===================================== */
+
+    @@media (max-width: 900px) {
+
+        .content-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .sidebar {
+            position: static;
+        }
+
+        .page-header {
+            flex-direction: column;
+        }
+
+        .price-box {
+            width: 100%;
+            text-align: left;
+        }
+    }
+
+
+    @@media (max-width: 650px) {
+
+        .trip-details-page {
+            padding: 20px 14px 40px;
+        }
+
+        h1 {
+            font-size: 26px;
+        }
+
+        .title-row {
+            gap: 10px;
+        }
+
+        .vehicle-badge {
+            width: 48px;
+            height: 48px;
+            font-size: 25px;
+        }
+
+        .journey {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .journey-line {
+            transform: rotate(0);
+        }
+
+        .info-grid,
+        .route-info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .route-title {
+            flex-wrap: wrap;
+        }
+
+        .card {
+            padding: 18px;
+        }
+
+        .layout-description {
+            flex-direction: column;
+        }
+    }
+
+</style>

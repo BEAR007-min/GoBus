@@ -2,16 +2,14 @@
     ViewData["Title"] = "Trang chủ";
 }
 
-<div class="hero-section">
+<!-- ============================= -->
+<!-- HERO -->
+<!-- ============================= -->
 
+<div class="hero-section">
     <div class="container">
 
-        <!-- ============================= -->
-        <!-- TIÊU ĐỀ -->
-        <!-- ============================= -->
-
-        <div class="hero-content">
-
+        <div class="hero-content text-center">
             <h1>
                 Đặt vé xe khách dễ dàng
             </h1>
@@ -20,12 +18,11 @@
                 Tìm kiếm chuyến xe, chọn ghế và đặt vé
                 nhanh chóng với GoBus.
             </p>
-
         </div>
 
 
         <!-- ============================= -->
-        <!-- FORM TÌM KIẾM CHUYẾN XE -->
+        <!-- FORM TÌM KIẾM -->
         <!-- ============================= -->
 
         <form asp-controller="Trips"
@@ -34,18 +31,16 @@
               class="search-box"
               id="searchForm">
 
-
-            <!-- ============================= -->
             <!-- ĐIỂM ĐI -->
-            <!-- ============================= -->
 
             <div class="search-item">
 
-                <label>
+                <label for="departure">
                     Điểm đi
                 </label>
 
                 <select name="departure"
+                        id="departure"
                         class="form-select">
 
                     <option value="">
@@ -123,11 +118,12 @@
 
             <div class="search-item">
 
-                <label>
+                <label for="destination">
                     Điểm đến
                 </label>
 
                 <select name="destination"
+                        id="destination"
                         class="form-select">
 
                     <option value="">
@@ -205,7 +201,7 @@
 
             <div class="search-item">
 
-                <label>
+                <label for="dateDisplay">
                     Ngày đi
                 </label>
 
@@ -224,7 +220,7 @@
 
 
             <!-- ============================= -->
-            <!-- NÚT TÌM KIẾM -->
+            <!-- BUTTON -->
             <!-- ============================= -->
 
             <div class="search-button">
@@ -241,9 +237,7 @@
         </form>
 
     </div>
-
 </div>
-
 
 
 <!-- ============================= -->
@@ -252,28 +246,38 @@
 
 <div class="container popular-routes">
 
-    <h2>
-        Tuyến xe phổ biến
-    </h2>
+    <div class="section-title text-center">
+
+        <h2>
+            Tuyến xe phổ biến
+        </h2>
+
+        <p>
+            Khám phá những tuyến đường được nhiều hành khách lựa chọn
+        </p>
+
+    </div>
 
 
-    <div class="row">
+    <div class="row g-4">
 
 
-        <!-- ============================= -->
         <!-- HÀ NỘI → ĐÀ NẴNG -->
-        <!-- ============================= -->
 
         <div class="col-md-4">
 
-            <div class="route-card">
+            <div class="route-card h-100">
+
+                <div class="route-icon">
+                    🚌
+                </div>
 
                 <h4>
                     Hà Nội → Đà Nẵng
                 </h4>
 
                 <p>
-                    Từ 450.000 VNĐ
+                    Từ <strong>450.000 VNĐ</strong>
                 </p>
 
                 <a asp-controller="Trips"
@@ -291,20 +295,22 @@
         </div>
 
 
-        <!-- ============================= -->
         <!-- TP.HCM → LÂM ĐỒNG -->
-        <!-- ============================= -->
 
         <div class="col-md-4">
 
-            <div class="route-card">
+            <div class="route-card h-100">
+
+                <div class="route-icon">
+                    🚌
+                </div>
 
                 <h4>
                     TP. Hồ Chí Minh → Lâm Đồng
                 </h4>
 
                 <p>
-                    Từ 300.000 VNĐ
+                    Từ <strong>300.000 VNĐ</strong>
                 </p>
 
                 <a asp-controller="Trips"
@@ -322,20 +328,22 @@
         </div>
 
 
-        <!-- ============================= -->
         <!-- ĐÀ NẴNG → HUẾ -->
-        <!-- ============================= -->
 
         <div class="col-md-4">
 
-            <div class="route-card">
+            <div class="route-card h-100">
+
+                <div class="route-icon">
+                    🚌
+                </div>
 
                 <h4>
                     Đà Nẵng → Thừa Thiên Huế
                 </h4>
 
                 <p>
-                    Từ 150.000 VNĐ
+                    Từ <strong>150.000 VNĐ</strong>
                 </p>
 
                 <a asp-controller="Trips"
@@ -357,9 +365,100 @@
 </div>
 
 
+<!-- ============================= -->
+<!-- VÌ SAO CHỌN GOBUS -->
+<!-- ============================= -->
+
+<div class="container why-gobus">
+
+    <div class="section-title text-center">
+
+        <h2>
+            Vì sao chọn GoBus?
+        </h2>
+
+        <p>
+            Đặt vé nhanh chóng và chủ động trong từng chuyến đi
+        </p>
+
+    </div>
+
+
+    <div class="row g-4">
+
+
+        <div class="col-md-4">
+
+            <div class="feature-card text-center">
+
+                <div class="feature-icon">
+                    🔎
+                </div>
+
+                <h4>
+                    Tìm chuyến dễ dàng
+                </h4>
+
+                <p>
+                    Tìm kiếm chuyến xe theo điểm đi,
+                    điểm đến và ngày khởi hành.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="feature-card text-center">
+
+                <div class="feature-icon">
+                    💺
+                </div>
+
+                <h4>
+                    Chủ động chọn ghế
+                </h4>
+
+                <p>
+                    Xem sơ đồ ghế và chọn vị trí
+                    phù hợp trước khi đặt vé.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="feature-card text-center">
+
+                <div class="feature-icon">
+                    🎫
+                </div>
+
+                <h4>
+                    Quản lý vé dễ dàng
+                </h4>
+
+                <p>
+                    Theo dõi vé đã đặt và hủy vé
+                    trực tiếp trên tài khoản GoBus.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 <!-- ============================= -->
-<!-- JAVASCRIPT NGÀY -->
+<!-- JAVASCRIPT -->
 <!-- ============================= -->
 
 <script>
@@ -373,9 +472,15 @@
     const searchForm =
         document.getElementById("searchForm");
 
+    const departure =
+        document.getElementById("departure");
+
+    const destination =
+        document.getElementById("destination");
+
 
     // ==========================================
-    // Tự động thêm dấu /
+    // TỰ ĐỘNG THÊM DẤU /
     // ==========================================
 
     dateDisplay.addEventListener("input", function () {
@@ -384,7 +489,10 @@
             this.value.replace(/\D/g, "");
 
         if (value.length > 8) {
-            value = value.substring(0, 8);
+
+            value =
+                value.substring(0, 8);
+
         }
 
 
@@ -414,103 +522,185 @@
 
 
     // ==========================================
-    // Kiểm tra ngày
+    // FORM SUBMIT
     // ==========================================
 
-    searchForm.addEventListener("submit", function (event) {
+    searchForm.addEventListener(
+        "submit",
+        function (event) {
 
-        const value =
-            dateDisplay.value.trim();
+            // ------------------------------
+            // KIỂM TRA ĐIỂM ĐI
+            // ------------------------------
+
+            if (departure.value === "") {
+
+                event.preventDefault();
+
+                alert("Vui lòng chọn điểm đi.");
+
+                departure.focus();
+
+                return;
+
+            }
 
 
-        // Không nhập ngày
-        if (value === "") {
+            // ------------------------------
+            // KIỂM TRA ĐIỂM ĐẾN
+            // ------------------------------
 
-            hiddenDate.value = "";
+            if (destination.value === "") {
 
-            return;
+                event.preventDefault();
+
+                alert("Vui lòng chọn điểm đến.");
+
+                destination.focus();
+
+                return;
+
+            }
+
+
+            // ------------------------------
+            // KHÔNG CHO CÙNG ĐIỂM
+            // ------------------------------
+
+            if (
+                departure.value !== "" &&
+                destination.value !== "" &&
+                departure.value === destination.value
+            ) {
+
+                event.preventDefault();
+
+                alert(
+                    "Điểm đi và điểm đến không được giống nhau."
+                );
+
+                destination.focus();
+
+                return;
+
+            }
+
+
+            // ------------------------------
+            // NGÀY
+            // ------------------------------
+
+            const value =
+                dateDisplay.value.trim();
+
+
+            // Không nhập ngày
+            if (value === "") {
+
+                hiddenDate.value = "";
+
+                return;
+
+            }
+
+
+            // ------------------------------
+            // KIỂM TRA DD/MM/YYYY
+            // ------------------------------
+
+            const regex =
+                /^(\d{2})\/(\d{2})\/(\d{4})$/;
+
+            const match =
+                value.match(regex);
+
+
+            if (!match) {
+
+                event.preventDefault();
+
+                alert(
+                    "Vui lòng nhập ngày theo định dạng DD/MM/YYYY."
+                );
+
+                dateDisplay.focus();
+
+                return;
+
+            }
+
+
+            const day =
+                parseInt(match[1], 10);
+
+            const month =
+                parseInt(match[2], 10);
+
+            const year =
+                parseInt(match[3], 10);
+
+
+            // ------------------------------
+            // KIỂM TRA THÁNG
+            // ------------------------------
+
+            if (
+                month < 1 ||
+                month > 12
+            ) {
+
+                event.preventDefault();
+
+                alert("Tháng không hợp lệ.");
+
+                dateDisplay.focus();
+
+                return;
+
+            }
+
+
+            // ------------------------------
+            // KIỂM TRA NGÀY
+            // ------------------------------
+
+            const testDate =
+                new Date(
+                    year,
+                    month - 1,
+                    day
+                );
+
+
+            if (
+                testDate.getFullYear() !== year ||
+                testDate.getMonth() !== month - 1 ||
+                testDate.getDate() !== day
+            ) {
+
+                event.preventDefault();
+
+                alert("Ngày không hợp lệ.");
+
+                dateDisplay.focus();
+
+                return;
+
+            }
+
+
+            // ------------------------------
+            // CHUYỂN SANG YYYY-MM-DD
+            // ------------------------------
+
+            hiddenDate.value =
+                year
+                + "-"
+                + String(month).padStart(2, "0")
+                + "-"
+                + String(day).padStart(2, "0");
+
         }
-
-
-        // Kiểm tra định dạng DD/MM/YYYY
-        const regex =
-            /^(\d{2})\/(\d{2})\/(\d{4})$/;
-
-
-        const match =
-            value.match(regex);
-
-
-        if (!match) {
-
-            event.preventDefault();
-
-            dateDisplay.focus();
-
-            return;
-        }
-
-
-        const day =
-            parseInt(match[1]);
-
-        const month =
-            parseInt(match[2]);
-
-        const year =
-            parseInt(match[3]);
-
-
-        // Kiểm tra tháng
-        if (month < 1 || month > 12) {
-
-            event.preventDefault();
-
-            alert("Tháng không hợp lệ.");
-
-            dateDisplay.focus();
-
-            return;
-        }
-
-
-        // Kiểm tra ngày thực tế
-        const testDate =
-            new Date(
-                year,
-                month - 1,
-                day
-            );
-
-
-        if (
-            testDate.getFullYear() !== year ||
-            testDate.getMonth() !== month - 1 ||
-            testDate.getDate() !== day
-        ) {
-
-            event.preventDefault();
-
-            alert("Ngày không hợp lệ.");
-
-            dateDisplay.focus();
-
-            return;
-        }
-
-
-        // ======================================
-        // Chuyển DD/MM/YYYY
-        // thành YYYY-MM-DD
-        // ======================================
-
-        hiddenDate.value =
-            year
-            + "-"
-            + String(month).padStart(2, "0")
-            + "-"
-            + String(day).padStart(2, "0");
-
-    });
+    );
 
 </script>

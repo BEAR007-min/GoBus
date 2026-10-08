@@ -2,171 +2,243 @@ using GoBus.Models;
 
 namespace GoBus.Data;
 
+using GoBusRoute = GoBus.Models.Route;
 public static class DbInitializer
 {
     public static void Initialize(GoBusDbContext context)
     {
-        // Nếu đã có dữ liệu thì không seed lại
+        context.Database.EnsureCreated();
+
+        // ==========================================
+        // 1. TẠO NHÀ XE
+        // ==========================================
+
+        SeedBusCompanies(context);
+
+        // ==========================================
+        // 2. TẠO XE
+        // ==========================================
+
+        SeedBuses(context);
+
+        // ==========================================
+        // 3. TẠO TUYẾN ĐƯỜNG
+        // ==========================================
+
+        SeedRoutes(context);
+
+        // ==========================================
+        // 4. TẠO CHUYẾN XE
+        // ==========================================
+
+        SeedTrips(context);
+    }
+
+
+    // =========================================================
+    // NHÀ XE
+    // =========================================================
+
+    private static void SeedBusCompanies(GoBusDbContext context)
+    {
         if (context.BusCompanies.Any())
         {
             return;
         }
 
-        // =====================================================
-        // 1. NHÀ XE
-        // =====================================================
-
         var companies = new List<BusCompany>
         {
             new BusCompany
             {
-                Name = "GoBus Express",
-                Phone = "0901000001",
-                Email = "gobus1@gmail.com",
+                Name = "Hoàng Long",
+                Phone = "19006789",
+                Email = "contact@hoanglong.vn",
                 Address = "Hà Nội",
-                Description = "Nhà xe mô phỏng GoBus"
+                Description = "Nhà xe phục vụ các tuyến Bắc - Trung - Nam."
             },
 
             new BusCompany
             {
-                Name = "Việt Lộ Coach",
-                Phone = "0901000002",
-                Email = "vietlo@gmail.com",
-                Address = "Hà Nội",
-                Description = "Nhà xe mô phỏng"
+                Name = "Phương Trang",
+                Phone = "19006067",
+                Email = "contact@futabus.vn",
+                Address = "TP. Hồ Chí Minh",
+                Description = "Nhà xe Phương Trang."
             },
 
             new BusCompany
             {
-                Name = "Đại Việt Coach",
-                Phone = "0901000003",
-                Email = "daiviet@gmail.com",
-                Address = "Hải Phòng",
-                Description = "Nhà xe mô phỏng"
+                Name = "Mai Linh",
+                Phone = "19006789",
+                Email = "contact@mailinh.vn",
+                Address = "TP. Hồ Chí Minh",
+                Description = "Nhà xe Mai Linh."
             },
 
             new BusCompany
             {
-                Name = "Sông Hồng Coach",
-                Phone = "0901000004",
-                Email = "songhong@gmail.com",
-                Address = "Hà Nội",
-                Description = "Nhà xe mô phỏng"
+                Name = "Kumho Samco",
+                Phone = "19006079",
+                Email = "contact@kumhosamco.vn",
+                Address = "TP. Hồ Chí Minh",
+                Description = "Nhà xe Kumho Samco."
             },
 
             new BusCompany
             {
-                Name = "Trường Sơn Travel",
-                Phone = "0901000005",
-                Email = "truongson@gmail.com",
-                Address = "Thanh Hóa",
-                Description = "Nhà xe mô phỏng"
+                Name = "Hà Sơn Hải Vân",
+                Phone = "19006776",
+                Email = "contact@hasonhaivan.com",
+                Address = "Lào Cai",
+                Description = "Nhà xe Hà Sơn Hải Vân."
             },
 
             new BusCompany
             {
-                Name = "Biển Việt",
-                Phone = "0901000006",
-                Email = "bienviet@gmail.com",
+                Name = "Cúc Tùng",
+                Phone = "19001010",
+                Email = "contact@cuctung.vn",
+                Address = "Khánh Hòa",
+                Description = "Nhà xe Cúc Tùng."
+            },
+
+            new BusCompany
+            {
+                Name = "Thành Bưởi",
+                Phone = "19006079",
+                Email = "contact@thanhbuoi.com.vn",
+                Address = "TP. Hồ Chí Minh",
+                Description = "Nhà xe Thành Bưởi."
+            },
+
+            new BusCompany
+            {
+                Name = "Quốc Đạt",
+                Phone = "19009090",
+                Email = "contact@quocdat.vn",
                 Address = "Đà Nẵng",
-                Description = "Nhà xe mô phỏng"
+                Description = "Nhà xe Quốc Đạt."
             },
 
             new BusCompany
             {
-                Name = "Hoa Sen Coach",
-                Phone = "0901000007",
-                Email = "hoasen@gmail.com",
-                Address = "TP. Hồ Chí Minh",
-                Description = "Nhà xe mô phỏng"
+                Name = "Tân Niên",
+                Phone = "19008888",
+                Email = "contact@tannien.vn",
+                Address = "Đồng Nai",
+                Description = "Nhà xe Tân Niên."
             },
 
             new BusCompany
             {
-                Name = "An Phú Travel",
-                Phone = "0901000008",
-                Email = "anphu@gmail.com",
-                Address = "Cần Thơ",
-                Description = "Nhà xe mô phỏng"
-            },
-
-            new BusCompany
-            {
-                Name = "Phương Nam Coach",
-                Phone = "0901000009",
-                Email = "phuongnam@gmail.com",
-                Address = "TP. Hồ Chí Minh",
-                Description = "Nhà xe mô phỏng"
-            },
-
-            new BusCompany
-            {
-                Name = "Bắc Nam Express",
-                Phone = "0901000010",
-                Email = "bacnam@gmail.com",
-                Address = "Hà Nội",
-                Description = "Nhà xe mô phỏng"
+                Name = "Liên Hưng",
+                Phone = "19007777",
+                Email = "contact@lienhung.vn",
+                Address = "Khánh Hòa",
+                Description = "Nhà xe Liên Hưng."
             }
         };
 
         context.BusCompanies.AddRange(companies);
         context.SaveChanges();
+    }
 
 
-        // =====================================================
-        // 2. XE
-        // =====================================================
+    // =========================================================
+    // XE
+    // =========================================================
+
+    private static void SeedBuses(GoBusDbContext context)
+    {
+        if (context.Buses.Any())
+        {
+            return;
+        }
+
+        var companies = context.BusCompanies
+            .OrderBy(c => c.Id)
+            .ToList();
+
+        if (companies.Count == 0)
+        {
+            return;
+        }
 
         var buses = new List<Bus>();
 
-        for (int i = 0; i < companies.Count; i++)
+        int busNumber = 1;
+
+        foreach (var company in companies)
         {
-            for (int j = 1; j <= 5; j++)
+            // Mỗi nhà xe có 5 xe
+            for (int i = 1; i <= 5; i++)
             {
+                bool isSleeper = i % 2 == 0;
+
                 buses.Add(new Bus
                 {
-                    BusCompanyId = companies[i].Id,
+                    BusCompanyId = company.Id,
 
-                    LicensePlate =
-                        $"29B-{10000 + i * 10 + j}",
+                    LicensePlate = $"29A-{10000 + busNumber}",
 
-                    BusType = j % 2 == 0
-                        ? "Giường nằm"
-                        : "Ghế ngồi",
+                    BusType = isSleeper
+                        ? "Xe giường nằm 24 chỗ"
+                        : "Xe ghế ngồi 45 chỗ",
 
-                    TotalSeats = j % 2 == 0
-                        ? 40
+                    TotalSeats = isSleeper
+                        ? 24
                         : 45
                 });
+
+                busNumber++;
             }
         }
 
         context.Buses.AddRange(buses);
         context.SaveChanges();
+    }
 
 
-        // =====================================================
-        // 3. 63 TỈNH / THÀNH
-        // =====================================================
+    // =========================================================
+    // TUYẾN ĐƯỜNG
+    // =========================================================
 
-        string[] provinces =
+    private static void SeedRoutes(GoBusDbContext context)
+    {
+        if (context.Routes.Any())
+        {
+            return;
+        }
+
+        /*
+         * Danh sách địa điểm đang sử dụng trong GoBus.
+         *
+         * Bạn có thể giữ danh sách 63 tỉnh/thành hiện tại
+         * mà dự án của bạn đang sử dụng.
+         */
+
+        var provinces = new List<string>
         {
             "Hà Nội",
-            "Hải Phòng",
-            "Quảng Ninh",
             "Hà Giang",
             "Cao Bằng",
             "Bắc Kạn",
             "Tuyên Quang",
             "Lào Cai",
+            "Điện Biên",
+            "Lai Châu",
+            "Sơn La",
             "Yên Bái",
+            "Hòa Bình",
             "Thái Nguyên",
             "Lạng Sơn",
+            "Quảng Ninh",
             "Bắc Giang",
             "Phú Thọ",
             "Vĩnh Phúc",
             "Bắc Ninh",
             "Hải Dương",
+            "Hải Phòng",
             "Hưng Yên",
             "Thái Bình",
             "Hà Nam",
@@ -212,93 +284,90 @@ public static class DbInitializer
             "Cà Mau"
         };
 
+        var routes = new List<GoBusRoute>();
 
-        // =====================================================
-        // 4. TẠO TOÀN BỘ TUYẾN
-        // =====================================================
-
-        var routes = new List<GoBus.Models.Route>();
+        var random = new Random(2026);
 
         /*
-         * 63 tỉnh/thành
+         * Tạo tất cả tuyến A → B.
          *
-         * Mỗi tỉnh có thể đi đến 62 tỉnh/thành còn lại.
+         * Ví dụ:
+         * Hà Nội → Đà Nẵng
+         * Đà Nẵng → Hà Nội
          *
-         * 63 × 62 = 3.906 tuyến một chiều
+         * Không tạo:
+         * Hà Nội → Hà Nội
          */
 
-        for (int departureIndex = 0;
-             departureIndex < provinces.Length;
-             departureIndex++)
+        foreach (var departure in provinces)
         {
-            for (int destinationIndex = 0;
-                 destinationIndex < provinces.Length;
-                 destinationIndex++)
+            foreach (var destination in provinces)
             {
-                // Không tạo tuyến tỉnh → chính nó
-                if (departureIndex == destinationIndex)
+                if (departure == destination)
                 {
                     continue;
                 }
 
-                string departure =
-                    provinces[departureIndex];
+                double distance = random.Next(50, 1501);
 
-                string destination =
-                    provinces[destinationIndex];
+                int duration = random.Next(90, 1801);
 
-
-                // Khoảng cách mô phỏng
-                double distance =
-                    50 +
-                    Math.Abs(destinationIndex - departureIndex) * 25;
-
-
-                // Giới hạn khoảng cách
-                if (distance > 1800)
-                {
-                    distance = 1800;
-                }
-
-
-                // Thời gian mô phỏng
-                int estimatedDuration =
-                    60 +
-                    (int)(distance * 1.15);
-
-
-                // Giới hạn thời gian
-                if (estimatedDuration > 1800)
-                {
-                    estimatedDuration = 1800;
-                }
-
-
-                routes.Add(
-                    new GoBus.Models.Route
-                    {
-                        Departure = departure,
-                        Destination = destination,
-                        Distance = distance,
-                        EstimatedDuration =
-                            estimatedDuration
-                    }
-                );
+                routes.Add(new GoBusRoute
+            {
+                Departure = departure,
+                Destination = destination,
+                Distance = distance,
+                EstimatedDuration = duration
+            });
             }
         }
 
-
         context.Routes.AddRange(routes);
         context.SaveChanges();
+    }
 
 
-        // =====================================================
-        // 5. TẠO CHUYẾN XE
-        // =====================================================
+    // =========================================================
+    // CHUYẾN XE
+    // =========================================================
 
-        var trips = new List<Trip>();
+    private static void SeedTrips(GoBusDbContext context)
+    {
+        /*
+         * Nếu database đã có chuyến thì không tạo lại.
+         */
 
-        var departureHours = new[]
+        if (context.Trips.Any())
+        {
+            return;
+        }
+
+        var companies = context.BusCompanies
+            .OrderBy(c => c.Id)
+            .ToList();
+
+        var buses = context.Buses
+            .OrderBy(b => b.Id)
+            .ToList();
+
+        var routes = context.Routes
+            .OrderBy(r => r.Id)
+            .ToList();
+
+        if (!companies.Any() ||
+            !buses.Any() ||
+            !routes.Any())
+        {
+            return;
+        }
+
+        var random = new Random(2026);
+
+        /*
+         * Các giờ khởi hành.
+         */
+
+        int[] departureHours =
         {
             5,
             7,
@@ -311,153 +380,126 @@ public static class DbInitializer
             21
         };
 
-        var random = new Random(2026);
-
+        int[] minutes =
+        {
+            0,
+            15,
+            30,
+            45
+        };
 
         /*
-         * 30 ngày
-         *
-         * Mỗi tuyến:
-         * 3 chuyến/ngày
-         *
-         * 3.906 × 30 × 3
-         *
-         * = 351.540 chuyến
+         * Tạo chuyến trong 365 ngày.
          */
+
+        DateTime startDate = DateTime.Today;
+
+        /*
+         * Vì số lượng chuyến rất lớn,
+         * không lưu toàn bộ vào RAM cùng lúc.
+         */
+
+        const int batchSize = 5000;
+
+        var tripBatch = new List<Trip>(batchSize);
+
+        int busIndex = 0;
 
         for (int day = 0; day < 365; day++)
         {
-            DateTime date =
-                DateTime.Today.AddDays(day);
+            DateTime currentDate = startDate.AddDays(day);
 
-
-            for (int routeIndex = 0;
-                 routeIndex < routes.Count;
-                 routeIndex++)
+            foreach (var route in routes)
             {
-                var route =
-                    routes[routeIndex];
+                /*
+                 * Mỗi tuyến có 2 chuyến/ngày.
+                 */
 
-
-                // 2 chuyến/ngày
                 for (int tripNumber = 0;
                      tripNumber < 2;
                      tripNumber++)
                 {
-                    // Chọn xe
-                    var bus =
-                        buses[
-                            (routeIndex +
-                             tripNumber +
-                             day)
-                            % buses.Count
-                        ];
+                    var bus = buses[busIndex % buses.Count];
 
+                    busIndex++;
 
-                    // Chọn giờ
                     int hour =
                         departureHours[
-                            (routeIndex +
-                             tripNumber)
-                            % departureHours.Length
+                            random.Next(departureHours.Length)
                         ];
 
-
-                    // 00 / 15 / 30 / 45
                     int minute =
-                        random.Next(0, 4) * 15;
-
+                        minutes[
+                            random.Next(minutes.Length)
+                        ];
 
                     DateTime departureTime =
-                        date
+                        currentDate
+                            .Date
                             .AddHours(hour)
                             .AddMinutes(minute);
 
+                    int duration =
+                        route.EstimatedDuration;
 
                     DateTime arrivalTime =
-                        departureTime.AddMinutes(
-                            route.EstimatedDuration
-                        );
+                        departureTime.AddMinutes(duration);
 
-
-                    // Giá vé mô phỏng
                     decimal price =
                         120000 +
                         random.Next(0, 9) * 50000;
 
+                    int availableSeats =
+                        bus.TotalSeats;
 
-                    trips.Add(
-                        new Trip
-                        {
-                            BusCompanyId =
-                                bus.BusCompanyId,
+                    tripBatch.Add(new Trip
+                    {
+                        BusCompanyId = bus.BusCompanyId,
 
-                            RouteId =
-                                route.Id,
+                        BusId = bus.Id,
 
-                            BusId =
-                                bus.Id,
+                        RouteId = route.Id,
 
-                            DepartureTime =
-                                departureTime,
+                        DepartureTime = departureTime,
 
-                            ArrivalTime =
-                                arrivalTime,
+                        ArrivalTime = arrivalTime,
 
-                            Price =
-                                price,
+                        Price = price,
 
-                            AvailableSeats =
-                                bus.TotalSeats
-                        }
-                    );
+                        AvailableSeats = availableSeats
+                    });
+
+                    /*
+                     * Khi đủ 5.000 chuyến thì lưu xuống DB.
+                     */
+
+                    if (tripBatch.Count >= batchSize)
+                    {
+                        context.Trips.AddRange(tripBatch);
+
+                        context.SaveChanges();
+
+                        tripBatch.Clear();
+
+                        Console.WriteLine(
+                            $"Đã tạo chuyến đến ngày {currentDate:dd/MM/yyyy}"
+                        );
+                    }
                 }
             }
         }
 
+        /*
+         * Lưu phần còn lại.
+         */
 
-        context.Trips.AddRange(trips);
-        context.SaveChanges();
+        if (tripBatch.Count > 0)
+        {
+            context.Trips.AddRange(tripBatch);
 
+            context.SaveChanges();
 
-        // =====================================================
-        // 6. THÔNG BÁO
-        // =====================================================
-
-        Console.WriteLine(
-            "=========================================="
-        );
-
-        Console.WriteLine(
-            "       GoBus seed data completed!"
-        );
-
-        Console.WriteLine(
-            "=========================================="
-        );
-
-        Console.WriteLine(
-            $"Nhà xe       : {companies.Count}"
-        );
-
-        Console.WriteLine(
-            $"Xe           : {buses.Count}"
-        );
-
-        Console.WriteLine(
-            $"Tỉnh / thành : {provinces.Length}"
-        );
-
-        Console.WriteLine(
-            $"Tuyến đường  : {routes.Count}"
-        );
-
-        Console.WriteLine(
-            $"Chuyến xe    : {trips.Count}"
-        );
-
-        Console.WriteLine(
-            "=========================================="
-        );
+            tripBatch.Clear();
+        }
     }
 }

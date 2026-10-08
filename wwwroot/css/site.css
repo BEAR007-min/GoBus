@@ -1,99 +1,438 @@
+/* =========================================================
+   GOBUS - GLOBAL
+   ========================================================= */
+
 html {
-  font-size: 14px;
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background: #ffffff;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+
+/* =========================================================
+   FORM / BUTTON FOCUS
+   ========================================================= */
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow:
+        0 0 0 0.1rem white,
+        0 0 0 0.25rem #258cfb;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+
+.form-floating > .form-control-plaintext::placeholder,
+.form-floating > .form-control::placeholder {
+    color: var(--bs-secondary-color);
+    text-align: end;
 }
+
+
+.form-floating > .form-control-plaintext:focus::placeholder,
+.form-floating > .form-control:focus::placeholder {
+    text-align: start;
+}
+
+
+/* =========================================================
+   HERO SECTION
+   ========================================================= */
 
 .hero-section {
-    padding: 80px 0;
+    padding: 80px 0 90px;
     background: #f5f7fb;
 }
+
 
 .hero-content {
     text-align: center;
     margin-bottom: 40px;
 }
 
+
 .hero-content h1 {
+    margin-bottom: 15px;
+
     font-size: 42px;
     font-weight: 700;
+    line-height: 1.2;
+
+    color: #212529;
 }
 
+
 .hero-content p {
+    margin-bottom: 0;
+
     font-size: 18px;
     color: #666;
+
+    line-height: 1.6;
 }
+
+
+/* =========================================================
+   SEARCH BOX
+   ========================================================= */
 
 .search-box {
     background: white;
+
     padding: 25px;
+
     border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.08);
 
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr auto;
+
+    grid-template-columns:
+        1fr
+        1fr
+        1fr
+        auto;
+
     gap: 15px;
+
     align-items: end;
 }
 
+
 .search-item label {
     display: block;
+
     font-weight: 600;
+
     margin-bottom: 8px;
+
+    color: #333;
 }
+
+
+.search-item .form-select,
+.search-item .form-control {
+    min-height: 42px;
+
+    border-radius: 8px;
+}
+
+
+.search-item .form-select:focus,
+.search-item .form-control:focus {
+    border-color: #258cfb;
+}
+
 
 .search-button button {
-    height: 38px;
+    min-height: 42px;
+
     padding: 0 25px;
+
+    white-space: nowrap;
+
+    border-radius: 8px;
 }
+
+
+/* =========================================================
+   SECTION TITLE
+   ========================================================= */
+
+.section-title {
+    margin-bottom: 35px;
+}
+
+
+.section-title h2 {
+    margin-bottom: 10px;
+
+    font-size: 30px;
+
+    font-weight: 700;
+
+    color: #212529;
+}
+
+
+.section-title p {
+    margin-bottom: 0;
+
+    color: #6c757d;
+
+    font-size: 16px;
+}
+
+
+/* =========================================================
+   POPULAR ROUTES
+   ========================================================= */
 
 .popular-routes {
-    padding-top: 50px;
-    padding-bottom: 50px;
+    padding-top: 60px;
+
+    padding-bottom: 60px;
 }
+
 
 .popular-routes h2 {
-    margin-bottom: 30px;
+    margin-bottom: 10px;
 }
+
 
 .route-card {
-    padding: 25px;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 12px;
+    height: 100%;
+
+    padding: 30px;
+
+    border: 1px solid #e1e5eb;
+
+    border-radius: 14px;
+
     background: white;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.04);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
 }
 
+
+.route-card:hover {
+    transform: translateY(-5px);
+
+    border-color: #258cfb;
+
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+
+.route-icon {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 18px;
+
+    border-radius: 12px;
+
+    background: #eef6ff;
+
+    font-size: 25px;
+}
+
+
 .route-card h4 {
+    margin-bottom: 12px;
+
+    font-weight: 600;
+
+    color: #212529;
+}
+
+
+.route-card p {
+    margin-bottom: 20px;
+
+    color: #666;
+}
+
+
+.route-card strong {
+    color: #258cfb;
+}
+
+
+/* =========================================================
+   WHY GOBUS
+   ========================================================= */
+
+.why-gobus {
+    padding-top: 20px;
+
+    padding-bottom: 80px;
+}
+
+
+.feature-card {
+    height: 100%;
+
+    padding: 30px 25px;
+
+    border: 1px solid #e1e5eb;
+
+    border-radius: 14px;
+
+    background: white;
+
+    box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.04);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.feature-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+
+.feature-icon {
+    margin-bottom: 18px;
+
+    font-size: 40px;
+}
+
+
+.feature-card h4 {
+    margin-bottom: 12px;
+
+    font-size: 20px;
+
     font-weight: 600;
 }
 
-.route-card p {
-    color: #666;
+
+.feature-card p {
+    margin-bottom: 0;
+
+    color: #6c757d;
+
+    line-height: 1.6;
+}
+
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .hero-section {
+        padding: 60px 0 70px;
+    }
+
+
+    .hero-content h1 {
+        font-size: 36px;
+    }
+
+
+    .search-box {
+        grid-template-columns:
+            1fr
+            1fr;
+    }
+
+
+    .search-button {
+        grid-column: 1 / -1;
+    }
+
+
+    .search-button button {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    body {
+        margin-bottom: 40px;
+    }
+
+
+    .hero-section {
+        padding: 45px 0 55px;
+    }
+
+
+    .hero-content {
+        margin-bottom: 30px;
+    }
+
+
+    .hero-content h1 {
+        font-size: 30px;
+    }
+
+
+    .hero-content p {
+        font-size: 16px;
+    }
+
+
+    .search-box {
+        grid-template-columns: 1fr;
+
+        padding: 20px;
+
+        gap: 15px;
+    }
+
+
+    .search-button {
+        grid-column: auto;
+    }
+
+
+    .search-button button {
+        width: 100%;
+    }
+
+
+    .popular-routes {
+        padding-top: 45px;
+
+        padding-bottom: 45px;
+    }
+
+
+    .why-gobus {
+        padding-bottom: 55px;
+    }
+
+
+    .section-title h2 {
+        font-size: 26px;
+    }
+
+
+    .route-card,
+    .feature-card {
+        padding: 25px;
+    }
+
 }

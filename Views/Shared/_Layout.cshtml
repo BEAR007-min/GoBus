@@ -83,7 +83,18 @@
 
             <!-- Khu vực tài khoản -->
             <ul class="navbar-nav">
-
+                @if (User.Identity?.IsAuthenticated == true &&
+                User.IsInRole("Admin"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link"
+                    asp-controller="Admin"
+                    asp-action="Index">
+                        🛠️ Admin
+                    </a>
+                </li>
+            }
+            
                 @if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
                     <li class="nav-item">

@@ -1,3 +1,4 @@
+using GoBus.Services;
 using GoBus.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -18,6 +19,7 @@ builder.Services.AddDbContext<GoBusDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<PasswordService>();
 
 var app = builder.Build();
 

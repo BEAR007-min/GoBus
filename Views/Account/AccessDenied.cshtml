@@ -1,0 +1,119 @@
+@{
+    ViewData["Title"] = "Không có quyền truy cập";
+}
+
+<style>
+    .access-denied-page {
+        min-height: calc(100vh - 150px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 50px 20px;
+        background: #f5f7fb;
+    }
+
+    .access-denied-card {
+        width: 100%;
+        max-width: 650px;
+        background: white;
+        border-radius: 24px;
+        padding: 50px 35px;
+        text-align: center;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .access-denied-icon {
+        width: 90px;
+        height: 90px;
+        margin: 0 auto 25px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff1f2;
+        font-size: 45px;
+    }
+
+    .access-denied-card h1 {
+        font-size: 32px;
+        font-weight: 800;
+        color: #111827;
+        margin-bottom: 15px;
+    }
+
+    .access-denied-card p {
+        color: #6b7280;
+        font-size: 16px;
+        line-height: 1.7;
+        margin-bottom: 30px;
+    }
+
+    .access-denied-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .access-button {
+        display: inline-block;
+        padding: 12px 22px;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    .access-button-primary {
+        background: #111827;
+        color: white;
+    }
+
+    .access-button-primary:hover {
+        color: white;
+        background: #000;
+    }
+
+    .access-button-secondary {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .access-button-secondary:hover {
+        color: #111827;
+        background: #e5e7eb;
+    }
+</style>
+
+<div class="access-denied-page">
+    <div class="access-denied-card">
+
+        <div class="access-denied-icon">
+            🔒
+        </div>
+
+        <h1>Không có quyền truy cập</h1>
+
+        <p>
+            Tài khoản của bạn không có quyền truy cập vào khu vực này.
+            <br />
+            Khu vực quản trị GoBus chỉ dành cho tài khoản Admin.
+        </p>
+
+        <div class="access-denied-buttons">
+
+            <a asp-controller="Home"
+               asp-action="Index"
+               class="access-button access-button-primary">
+                🏠 Về trang chủ
+            </a>
+
+            <a asp-controller="Account"
+               asp-action="Login"
+               class="access-button access-button-secondary">
+                🔐 Đăng nhập tài khoản khác
+            </a>
+
+        </div>
+
+    </div>
+</div>

@@ -94,7 +94,6 @@ D:\GoBus\GoBus\obj\Debug\net10.0\refint\GoBus.dll
 D:\GoBus\GoBus\obj\Debug\net10.0\GoBus.pdb
 D:\GoBus\GoBus\obj\Debug\net10.0\GoBus.genruntimeconfig.cache
 D:\GoBus\GoBus\obj\Debug\net10.0\ref\GoBus.dll
-D:\GoBus\GoBus\obj\Debug\net10.0\compressed\nb96985z0s-{0}-ef8rg22vv9-ef8rg22vv9.gz
 D:\GoBus\Gobus\obj\Debug\net10.0\GoBus.csproj.AssemblyReference.cache
 D:\GoBus\Gobus\bin\Debug\net10.0\Azure.Core.dll
 D:\GoBus\Gobus\bin\Debug\net10.0\Azure.Identity.dll
@@ -229,3 +228,5 @@ D:\GoBus\Gobus\bin\Debug\net10.0\runtimes\win-arm64\native\msalruntime_arm64.dll
 D:\GoBus\Gobus\bin\Debug\net10.0\runtimes\win-x64\native\msalruntime.dll
 D:\GoBus\Gobus\bin\Debug\net10.0\runtimes\win-x86\native\msalruntime_x86.dll
 D:\GoBus\Gobus\obj\Debug\net10.0\GoBus.csproj.Up2Date
+D:\GoBus\GoBus\obj\Debug\net10.0\GoBus.sourcelink.json
+D:\GoBus\GoBus\obj\Debug\net10.0\compressed\nb96985z0s-{0}-vrimgplf5d-vrimgplf5d.gz

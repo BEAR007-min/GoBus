@@ -1,0 +1,627 @@
+@model GoBus.ViewModels.AdminDashboardViewModel
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<style>
+    .admin-page {
+        padding: 30px;
+        background: #f8fafc;
+        min-height: calc(100vh - 70px);
+    }
+
+    .admin-header {
+        margin-bottom: 30px;
+    }
+
+    .admin-title {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .admin-description {
+        margin-top: 8px;
+        color: #64748b;
+        font-size: 15px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 22px;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.06);
+        border: 1px solid #e2e8f0;
+    }
+
+    .stat-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .stat-icon {
+        width: 46px;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        font-size: 22px;
+        background: #eff6ff;
+    }
+
+    .stat-label {
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .stat-value {
+        font-size: 28px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .section-title {
+        font-size: 21px;
+        font-weight: 750;
+        color: #0f172a;
+        margin-bottom: 16px;
+    }
+
+    .management-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+        margin-bottom: 30px;
+    }
+
+    .management-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 22px;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
+        transition: 0.2s;
+    }
+
+    .management-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.09);
+    }
+
+    .management-icon {
+        font-size: 32px;
+        margin-bottom: 12px;
+    }
+
+    .management-name {
+        font-size: 17px;
+        font-weight: 750;
+        color: #0f172a;
+        margin-bottom: 7px;
+    }
+
+    .management-description {
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.5;
+        min-height: 40px;
+        margin-bottom: 16px;
+    }
+
+    .management-button {
+        display: inline-block;
+        padding: 9px 15px;
+        background: #2563eb;
+        color: white;
+        text-decoration: none;
+        border-radius: 9px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .management-button:hover {
+        background: #1d4ed8;
+        color: white;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .dashboard-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
+    }
+
+    .dashboard-card-title {
+        font-size: 18px;
+        font-weight: 750;
+        color: #0f172a;
+        margin-bottom: 20px;
+    }
+
+    .revenue-value {
+        font-size: 30px;
+        font-weight: 800;
+        color: #16a34a;
+    }
+
+    .revenue-label {
+        color: #64748b;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .booking-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 13px 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .booking-row:last-child {
+        border-bottom: none;
+    }
+
+    .booking-label {
+        color: #475569;
+        font-weight: 600;
+    }
+
+    .booking-value {
+        font-size: 18px;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .confirmed {
+        color: #16a34a;
+    }
+
+    .cancelled {
+        color: #dc2626;
+    }
+
+    .today-box {
+        margin-top: 20px;
+        padding: 15px;
+        background: #eff6ff;
+        border-radius: 12px;
+        color: #1d4ed8;
+        font-weight: 650;
+    }
+
+    @@media (max-width: 1100px) {
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .management-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 700px) {
+        .admin-page {
+            padding: 18px;
+        }
+
+        .stats-grid,
+        .management-grid,
+        .dashboard-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .admin-title {
+            font-size: 26px;
+        }
+    }
+</style>
+
+<div class="admin-page">
+
+    <!-- HEADER -->
+    <div class="admin-header">
+        <h1 class="admin-title">
+            🛠️ Admin Dashboard
+        </h1>
+
+        <p class="admin-description">
+            Quản lý và theo dõi toàn bộ hệ thống GoBus.
+        </p>
+    </div>
+
+
+    <!-- THỐNG KÊ -->
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Khách hàng</span>
+                <div class="stat-icon">👥</div>
+            </div>
+
+            <div class="stat-value">
+                @Model.TotalCustomers
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Nhà xe</span>
+                <div class="stat-icon">🏢</div>
+            </div>
+
+            <div class="stat-value">
+                @Model.TotalBusCompanies
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Xe</span>
+                <div class="stat-icon">🚌</div>
+            </div>
+
+            <div class="stat-value">
+                @Model.TotalBuses
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Tuyến đường</span>
+                <div class="stat-icon">🛣️</div>
+            </div>
+
+            <div class="stat-value">
+                @Model.TotalRoutes
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Chuyến xe</span>
+                <div class="stat-icon">🚍</div>
+            </div>
+
+            <div class="stat-value">
+                @Model.TotalTrips
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Vé đã đặt</span>
+                <div class="stat-icon">🎫</div>
+            </div>
+
+            <div class="stat-value">
+                @Model.TotalBookings
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Tài khoản</span>
+                <div class="stat-icon">👤</div>
+            </div>
+
+            <div class="stat-value">
+                @Model.TotalUsers
+            </div>
+        </div>
+
+
+        <div class="stat-card">
+            <div class="stat-top">
+                <span class="stat-label">Chuyến hôm nay</span>
+                <div class="stat-icon">📅</div>
+            </div>
+
+            <div class="stat-value">
+                @Model.TodayTrips
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- QUẢN LÝ -->
+    <div class="section-title">
+        ⚙️ Quản lý hệ thống
+    </div>
+
+
+    <div class="management-grid">
+
+        <!-- NHÀ XE -->
+        <div class="management-card">
+
+            <div class="management-icon">
+                🏢
+            </div>
+
+            <div class="management-name">
+                Quản lý Nhà xe
+            </div>
+
+            <div class="management-description">
+                Thêm, sửa, xem và xóa thông tin các nhà xe.
+            </div>
+
+            <a asp-controller="AdminBusCompanies"
+               asp-action="Index"
+               class="management-button">
+                Quản lý
+            </a>
+
+        </div>
+
+
+        <!-- XE -->
+        <div class="management-card">
+
+            <div class="management-icon">
+                🚌
+            </div>
+
+            <div class="management-name">
+                Quản lý Xe
+            </div>
+
+            <div class="management-description">
+                Quản lý xe, biển số, loại xe và số lượng ghế.
+            </div>
+
+            <a href="#"
+               class="management-button">
+                Quản lý
+            </a>
+
+        </div>
+
+
+        <!-- TUYẾN -->
+        <div class="management-card">
+
+            <div class="management-icon">
+                🛣️
+            </div>
+
+            <div class="management-name">
+                Quản lý Tuyến
+            </div>
+
+            <div class="management-description">
+                Quản lý điểm đi, điểm đến và thời gian di chuyển.
+            </div>
+
+            <a href="#"
+               class="management-button">
+                Quản lý
+            </a>
+
+        </div>
+
+
+        <!-- CHUYẾN -->
+        <div class="management-card">
+
+            <div class="management-icon">
+                🚍
+            </div>
+
+            <div class="management-name">
+                Quản lý Chuyến
+            </div>
+
+            <div class="management-description">
+                Quản lý lịch chạy, giá vé và số ghế còn lại.
+            </div>
+
+            <a href="#"
+               class="management-button">
+                Quản lý
+            </a>
+
+        </div>
+
+
+        <!-- GHẾ -->
+        <div class="management-card">
+
+            <div class="management-icon">
+                💺
+            </div>
+
+            <div class="management-name">
+                Quản lý Ghế / Giường
+            </div>
+
+            <div class="management-description">
+                Quản lý sơ đồ ghế và giường theo từng chuyến.
+            </div>
+
+            <a href="#"
+               class="management-button">
+                Quản lý
+            </a>
+
+        </div>
+
+
+        <!-- VÉ -->
+        <div class="management-card">
+
+            <div class="management-icon">
+                🎫
+            </div>
+
+            <div class="management-name">
+                Quản lý Vé
+            </div>
+
+            <div class="management-description">
+                Theo dõi đặt vé, trạng thái và doanh thu.
+            </div>
+
+            <a href="#"
+               class="management-button">
+                Quản lý
+            </a>
+
+        </div>
+
+
+        <!-- KHÁCH HÀNG -->
+        <div class="management-card">
+
+            <div class="management-icon">
+                👥
+            </div>
+
+            <div class="management-name">
+                Quản lý Khách hàng
+            </div>
+
+            <div class="management-description">
+                Xem và quản lý thông tin khách hàng.
+            </div>
+
+            <a href="#"
+               class="management-button">
+                Quản lý
+            </a>
+
+        </div>
+
+
+        <!-- THỐNG KÊ -->
+        <div class="management-card">
+
+            <div class="management-icon">
+                📊
+            </div>
+
+            <div class="management-name">
+                Thống kê
+            </div>
+
+            <div class="management-description">
+                Xem thống kê chuyến xe, vé và doanh thu.
+            </div>
+
+            <a href="#"
+               class="management-button">
+                Xem thống kê
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- DOANH THU + ĐẶT VÉ -->
+    <div class="dashboard-grid">
+
+        <!-- DOANH THU -->
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-title">
+                💰 Doanh thu
+            </div>
+
+            <div class="revenue-value">
+                @Model.ConfirmedRevenue.ToString("N0") VNĐ
+            </div>
+
+            <div class="revenue-label">
+                Doanh thu từ các vé đã xác nhận
+            </div>
+
+            <div class="today-box">
+                Tổng doanh thu tất cả trạng thái:
+                <strong>
+                    @Model.TotalRevenue.ToString("N0") VNĐ
+                </strong>
+            </div>
+
+        </div>
+
+
+        <!-- ĐẶT VÉ -->
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-title">
+                🎫 Tình trạng đặt vé
+            </div>
+
+            <div class="booking-row">
+
+                <span class="booking-label">
+                    Tổng số vé
+                </span>
+
+                <span class="booking-value">
+                    @Model.TotalBookings
+                </span>
+
+            </div>
+
+
+            <div class="booking-row">
+
+                <span class="booking-label">
+                    Vé đã xác nhận
+                </span>
+
+                <span class="booking-value confirmed">
+                    @Model.ConfirmedBookings
+                </span>
+
+            </div>
+
+
+            <div class="booking-row">
+
+                <span class="booking-label">
+                    Vé đã hủy
+                </span>
+
+                <span class="booking-value cancelled">
+                    @Model.CancelledBookings
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

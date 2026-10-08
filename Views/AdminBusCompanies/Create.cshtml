@@ -1,0 +1,143 @@
+@model GoBus.Models.BusCompany
+
+@{
+    ViewData["Title"] = "Thêm nhà xe";
+}
+
+<div class="container py-5">
+
+    <div class="mb-4">
+        <h1 class="fw-bold">
+            ➕ Thêm nhà xe
+        </h1>
+
+        <p class="text-muted">
+            Thêm một nhà xe mới vào hệ thống GoBus.
+        </p>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4">
+
+        <div class="card-body p-4 p-md-5">
+
+            <form asp-action="Create"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3">
+                </div>
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Name"
+                               class="form-label fw-semibold">
+                            Tên nhà xe
+                        </label>
+
+                        <input asp-for="Name"
+                               class="form-control"
+                               placeholder="Ví dụ: Nhà xe Phương Trang" />
+
+                        <span asp-validation-for="Name"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Phone"
+                               class="form-label fw-semibold">
+                            Số điện thoại
+                        </label>
+
+                        <input asp-for="Phone"
+                               class="form-control"
+                               placeholder="Ví dụ: 19006067" />
+
+                        <span asp-validation-for="Phone"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Email"
+                               class="form-label fw-semibold">
+                            Email
+                        </label>
+
+                        <input asp-for="Email"
+                               type="email"
+                               class="form-control"
+                               placeholder="example@gobus.vn" />
+
+                        <span asp-validation-for="Email"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Address"
+                               class="form-label fw-semibold">
+                            Địa chỉ
+                        </label>
+
+                        <input asp-for="Address"
+                               class="form-control"
+                               placeholder="Địa chỉ nhà xe" />
+
+                        <span asp-validation-for="Address"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                    <div class="col-12">
+
+                        <label asp-for="Description"
+                               class="form-label fw-semibold">
+                            Mô tả
+                        </label>
+
+                        <textarea asp-for="Description"
+                                  class="form-control"
+                                  rows="5"
+                                  placeholder="Thông tin giới thiệu về nhà xe..."></textarea>
+
+                        <span asp-validation-for="Description"
+                              class="text-danger">
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+
+                    <button type="submit"
+                            class="btn btn-dark px-4">
+                        💾 Lưu nhà xe
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-light px-4">
+                        Hủy
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
