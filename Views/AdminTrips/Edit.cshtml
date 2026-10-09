@@ -1,0 +1,235 @@
+@model GoBus.Models.Trip
+
+@{
+    ViewData["Title"] = "Chỉnh sửa chuyến xe";
+}
+
+<div class="container py-4">
+
+    <div class="mb-4">
+        <h2 class="fw-bold">
+            Chỉnh sửa chuyến xe
+        </h2>
+
+        <p class="text-muted">
+            Cập nhật thông tin lịch trình chuyến xe.
+        </p>
+    </div>
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-white py-3">
+
+            <h5 class="mb-0 fw-bold">
+                Chuyến xe #@Model.Id
+            </h5>
+
+        </div>
+
+        <div class="card-body">
+
+            <form asp-action="Edit"
+                  asp-route-id="@Model.Id"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       asp-for="Id" />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger"></div>
+
+                <div class="row g-4">
+
+                    <!-- Nhà xe -->
+                    <div class="col-md-6">
+
+                        <label asp-for="BusCompanyId"
+                               class="form-label fw-semibold">
+                            Nhà xe
+                        </label>
+
+                        <select asp-for="BusCompanyId"
+                                asp-items="ViewBag.BusCompanies"
+                                class="form-select">
+
+                            <option value="">
+                                -- Chọn nhà xe --
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="BusCompanyId"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <!-- Xe -->
+                    <div class="col-md-6">
+
+                        <label asp-for="BusId"
+                               class="form-label fw-semibold">
+                            Xe
+                        </label>
+
+                        <select asp-for="BusId"
+                                asp-items="ViewBag.Buses"
+                                class="form-select">
+
+                            <option value="">
+                                -- Chọn xe --
+                            </option>
+
+                        </select>
+
+                        <span asp-validation-for="BusId"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <!-- Tuyến -->
+                    <div class="col-12">
+
+                        <label asp-for="RouteId"
+                               class="form-label fw-semibold">
+                            Tuyến đường
+                        </label>
+
+                        <select asp-for="RouteId"
+                                class="form-select">
+
+                            <option value="">
+                                -- Chọn tuyến đường --
+                            </option>
+
+                            @foreach (var route in ViewBag.RouteList)
+                            {
+                                <option value="@route.Id">
+                                    @route.Departure → @route.Destination
+                                    (@route.Distance km)
+                                </option>
+                            }
+
+                        </select>
+
+                        <span asp-validation-for="RouteId"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <!-- Khởi hành -->
+                    <div class="col-md-6">
+
+                        <label asp-for="DepartureTime"
+                               class="form-label fw-semibold">
+                            Thời gian khởi hành
+                        </label>
+
+                        <input asp-for="DepartureTime"
+                               type="datetime-local"
+                               class="form-control" />
+
+                        <span asp-validation-for="DepartureTime"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <!-- Đến nơi -->
+                    <div class="col-md-6">
+
+                        <label asp-for="ArrivalTime"
+                               class="form-label fw-semibold">
+                            Thời gian đến
+                        </label>
+
+                        <input asp-for="ArrivalTime"
+                               type="datetime-local"
+                               class="form-control" />
+
+                        <span asp-validation-for="ArrivalTime"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <!-- Giá -->
+                    <div class="col-md-6">
+
+                        <label asp-for="Price"
+                               class="form-label fw-semibold">
+                            Giá vé
+                        </label>
+
+                        <div class="input-group">
+
+                            <input asp-for="Price"
+                                   type="number"
+                                   min="0"
+                                   step="1000"
+                                   class="form-control" />
+
+                            <span class="input-group-text">
+                                VNĐ
+                            </span>
+
+                        </div>
+
+                        <span asp-validation-for="Price"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <!-- Số chỗ -->
+                    <div class="col-md-6">
+
+                        <label class="form-label fw-semibold">
+                            Số chỗ còn lại
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               value="@Model.AvailableSeats"
+                               readonly />
+
+                        <div class="form-text">
+                            Số chỗ sẽ được hệ thống tự động cập nhật
+                            theo tình trạng đặt vé.
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr class="my-4" />
+
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-primary px-4">
+                        💾 Lưu thay đổi
+                    </button>
+
+                    <a asp-action="Details"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-outline-info">
+                        👁 Xem chi tiết
+                    </a>
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary">
+                        Hủy
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

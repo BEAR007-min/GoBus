@@ -1,0 +1,431 @@
+@model GoBus.Models.Trip
+
+@{
+    ViewData["Title"] = "Chi tiết chuyến xe";
+
+    var isSleeper = Model.Bus?.LayoutType == "Sleeper24";
+}
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                Chi tiết chuyến xe
+            </h2>
+
+            <p class="text-muted mb-0">
+                Thông tin chi tiết chuyến xe #@Model.Id
+            </p>
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning">
+                ✏️ Chỉnh sửa
+            </a>
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+                ← Danh sách
+            </a>
+
+        </div>
+
+    </div>
+
+    <!-- Tổng quan -->
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Giá vé
+                    </div>
+
+                    <div class="fs-4 fw-bold text-danger mt-2">
+                        @Model.Price.ToString("N0") đ
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Chỗ còn lại
+                    </div>
+
+                    <div class="fs-4 fw-bold text-success mt-2">
+                        @Model.AvailableSeats
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Loại xe
+                    </div>
+
+                    <div class="fs-5 fw-bold mt-2">
+
+                        @if (isSleeper)
+                        {
+                            <span>🛏️ Giường nằm</span>
+                        }
+                        else
+                        {
+                            <span>💺 Ghế ngồi</span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <div class="text-muted small">
+                        Tổng số chỗ
+                    </div>
+
+                    <div class="fs-4 fw-bold mt-2">
+                        @Model.Bus?.TotalSeats
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="row g-4">
+
+        <!-- Thông tin tuyến -->
+        <div class="col-lg-6">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="fw-bold mb-0">
+                        🛣️ Thông tin tuyến đường
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    @if (Model.Route != null)
+                    {
+                        <div class="mb-4">
+
+                            <div class="text-muted small">
+                                Điểm đi
+                            </div>
+
+                            <div class="fs-4 fw-bold">
+                                @Model.Route.Departure
+                            </div>
+
+                        </div>
+
+                        <div class="text-center text-muted mb-4">
+                            ↓
+                        </div>
+
+                        <div class="mb-4">
+
+                            <div class="text-muted small">
+                                Điểm đến
+                            </div>
+
+                            <div class="fs-4 fw-bold">
+                                @Model.Route.Destination
+                            </div>
+
+                        </div>
+
+                        <hr />
+
+                        <div class="row">
+
+                            <div class="col-6">
+
+                                <div class="text-muted small">
+                                    Khoảng cách
+                                </div>
+
+                                <div class="fw-bold">
+                                    @Model.Route.Distance km
+                                </div>
+
+                            </div>
+
+                            <div class="col-6">
+
+                                <div class="text-muted small">
+                                    Thời gian dự kiến
+                                </div>
+
+                                <div class="fw-bold">
+                                    @Model.Route.EstimatedDuration phút
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            Chuyến xe chưa được gán tuyến đường.
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Thông tin xe -->
+        <div class="col-lg-6">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="fw-bold mb-0">
+                        🚌 Thông tin xe
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="mb-3">
+
+                        <div class="text-muted small">
+                            Nhà xe
+                        </div>
+
+                        <div class="fw-bold fs-5">
+                            @Model.BusCompany?.Name
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <div class="text-muted small">
+                            Biển số
+                        </div>
+
+                        <div class="fw-bold fs-5">
+                            @Model.Bus?.LicensePlate
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <div class="text-muted small">
+                            Loại xe
+                        </div>
+
+                        <div>
+                            @Model.Bus?.BusType
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <div class="text-muted small">
+                            Sơ đồ
+                        </div>
+
+                        <div>
+
+                            @if (isSleeper)
+                            {
+                                <span class="badge bg-info text-dark">
+                                    Sleeper24 - 24 giường
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-primary">
+                                    Seat45 - 45 ghế
+                                </span>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Thời gian -->
+        <div class="col-lg-6">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="fw-bold mb-0">
+                        🕐 Thời gian
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row">
+
+                        <div class="col-6">
+
+                            <div class="text-muted small">
+                                Khởi hành
+                            </div>
+
+                            <div class="fw-bold fs-5">
+                                @Model.DepartureTime.ToString("HH:mm")
+                            </div>
+
+                            <div>
+                                @Model.DepartureTime.ToString("dd/MM/yyyy")
+                            </div>
+
+                        </div>
+
+                        <div class="col-6">
+
+                            <div class="text-muted small">
+                                Đến nơi
+                            </div>
+
+                            <div class="fw-bold fs-5">
+                                @Model.ArrivalTime.ToString("HH:mm")
+                            </div>
+
+                            <div>
+                                @Model.ArrivalTime.ToString("dd/MM/yyyy")
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Ghế -->
+        <div class="col-lg-6">
+
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header bg-white py-3">
+
+                    <h5 class="fw-bold mb-0">
+                        💺 Tình trạng chỗ
+                    </h5>
+
+                </div>
+
+                <div class="card-body">
+
+                    @{
+                        var totalSeats = Model.Seats?.Count ?? 0;
+                        var bookedSeats = Model.Seats?.Count(s => s.IsBooked) ?? 0;
+                    }
+
+                    <div class="row text-center">
+
+                        <div class="col-4">
+
+                            <div class="fs-3 fw-bold">
+                                @totalSeats
+                            </div>
+
+                            <div class="text-muted small">
+                                Tổng
+                            </div>
+
+                        </div>
+
+                        <div class="col-4">
+
+                            <div class="fs-3 fw-bold text-danger">
+                                @bookedSeats
+                            </div>
+
+                            <div class="text-muted small">
+                                Đã đặt
+                            </div>
+
+                        </div>
+
+                        <div class="col-4">
+
+                            <div class="fs-3 fw-bold text-success">
+                                @(totalSeats - bookedSeats)
+                            </div>
+
+                            <div class="text-muted small">
+                                Còn trống
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

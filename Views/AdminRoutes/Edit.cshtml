@@ -1,0 +1,146 @@
+@model GoBus.Models.Route
+
+@{
+    ViewData["Title"] = "Chỉnh sửa tuyến";
+}
+
+<div class="container-fluid py-4">
+
+    <div class="mb-4">
+        <h2 class="fw-bold">
+            ✏️ Chỉnh sửa tuyến
+        </h2>
+
+        <p class="text-muted">
+            Cập nhật thông tin tuyến đường.
+        </p>
+    </div>
+
+    <div class="card shadow-sm">
+
+        <div class="card-body">
+
+            <form asp-action="Edit"
+                  asp-route-id="@Model.Id"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       asp-for="Id" />
+
+                <div asp-validation-summary="ModelOnly"
+                     class="alert alert-danger"></div>
+
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Departure"
+                               class="form-label fw-semibold">
+                            Điểm đi
+                        </label>
+
+                        <input asp-for="Departure"
+                               class="form-control" />
+
+                        <span asp-validation-for="Departure"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Destination"
+                               class="form-label fw-semibold">
+                            Điểm đến
+                        </label>
+
+                        <input asp-for="Destination"
+                               class="form-control" />
+
+                        <span asp-validation-for="Destination"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="Distance"
+                               class="form-label fw-semibold">
+                            Khoảng cách
+                        </label>
+
+                        <div class="input-group">
+
+                            <input asp-for="Distance"
+                                   type="number"
+                                   step="0.1"
+                                   min="0"
+                                   class="form-control" />
+
+                            <span class="input-group-text">
+                                km
+                            </span>
+
+                        </div>
+
+                        <span asp-validation-for="Distance"
+                              class="text-danger"></span>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <label asp-for="EstimatedDuration"
+                               class="form-label fw-semibold">
+                            Thời gian dự kiến
+                        </label>
+
+                        <div class="input-group">
+
+                            <input asp-for="EstimatedDuration"
+                                   type="number"
+                                   min="1"
+                                   class="form-control" />
+
+                            <span class="input-group-text">
+                                phút
+                            </span>
+
+                        </div>
+
+                        <span asp-validation-for="EstimatedDuration"
+                              class="text-danger"></span>
+
+                    </div>
+
+                </div>
+
+                <hr class="my-4" />
+
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        💾 Lưu thay đổi
+                    </button>
+
+                    <a asp-action="Index"
+                       class="btn btn-outline-secondary">
+                        ← Quay lại
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

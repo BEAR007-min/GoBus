@@ -391,9 +391,11 @@
                 🚌
             </div>
 
-            <div class="management-name">
-                Quản lý Xe
-            </div>
+            <a asp-controller="AdminBuses"
+            asp-action="Index"
+            class="management-button">
+                Quản lý
+            </a>
 
             <div class="management-description">
                 Quản lý xe, biển số, loại xe và số lượng ghế.
@@ -414,9 +416,11 @@
                 🛣️
             </div>
 
-            <div class="management-name">
-                Quản lý Tuyến
-            </div>
+           <a asp-controller="AdminRoutes"
+            asp-action="Index"
+            class="management-button">
+                Quản lý
+            </a>
 
             <div class="management-description">
                 Quản lý điểm đi, điểm đến và thời gian di chuyển.
