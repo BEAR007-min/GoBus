@@ -1,0 +1,155 @@
+@model GoBus.Models.Customer
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Khách hàng";
+}
+
+<style>
+    .edit-page {
+        padding: 30px 0 50px;
+    }
+
+    .edit-card {
+        max-width: 800px;
+        margin: 0 auto;
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    .page-title {
+        font-weight: 700;
+    }
+</style>
+
+<div class="container edit-page">
+
+    <div class="mb-4">
+
+        <h2 class="page-title">
+            ✏️ Chỉnh sửa Khách hàng
+        </h2>
+
+        <p class="text-muted">
+            Cập nhật thông tin khách hàng #@Model.Id
+        </p>
+
+    </div>
+
+
+    <div class="card edit-card">
+
+        <div class="card-body p-4">
+
+            <form asp-action="Edit"
+                  method="post">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       asp-for="Id" />
+
+
+                <!-- HỌ TÊN -->
+
+                <div class="mb-4">
+
+                    <label asp-for="FullName"
+                           class="form-label fw-semibold">
+                        Họ và tên
+                    </label>
+
+                    <input asp-for="FullName"
+                           class="form-control"
+                           placeholder="Nhập họ và tên..." />
+
+                    <span asp-validation-for="FullName"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- SỐ ĐIỆN THOẠI -->
+
+                <div class="mb-4">
+
+                    <label asp-for="Phone"
+                           class="form-label fw-semibold">
+                        Số điện thoại
+                    </label>
+
+                    <input asp-for="Phone"
+                           class="form-control"
+                           placeholder="Nhập số điện thoại..." />
+
+                    <span asp-validation-for="Phone"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="mb-4">
+
+                    <label asp-for="Email"
+                           class="form-label fw-semibold">
+                        Email
+                    </label>
+
+                    <input asp-for="Email"
+                           type="email"
+                           class="form-control"
+                           placeholder="Nhập email..." />
+
+                    <span asp-validation-for="Email"
+                          class="text-danger">
+                    </span>
+
+                </div>
+
+
+                <!-- THÔNG TIN -->
+
+                <div class="alert alert-info">
+
+                    <strong>ℹ️ Lưu ý:</strong>
+
+                    Việc chỉnh sửa thông tin này không ảnh hưởng
+                    đến lịch sử đặt vé của khách hàng.
+
+                </div>
+
+
+                <!-- BUTTON -->
+
+                <div class="d-flex gap-2">
+
+                    <button type="submit"
+                            class="btn btn-primary">
+                        💾 Lưu thay đổi
+                    </button>
+
+                    <a asp-action="Details"
+                       asp-route-id="@Model.Id"
+                       class="btn btn-outline-secondary">
+                        Hủy
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

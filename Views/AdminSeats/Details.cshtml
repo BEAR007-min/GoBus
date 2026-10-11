@@ -1,0 +1,635 @@
+@model IEnumerable<GoBus.Models.Seat>
+
+@{
+    ViewData["Title"] = "Sơ đồ Ghế/Giường";
+
+    var trip = ViewBag.Trip as GoBus.Models.Trip;
+
+    var isSleeper = (bool)(ViewBag.IsSleeper ?? false);
+
+    var totalSeats = (int)(ViewBag.TotalSeats ?? 0);
+
+    var bookedSeats = (int)(ViewBag.BookedSeats ?? 0);
+
+    var availableSeats = (int)(ViewBag.AvailableSeats ?? 0);
+}
+
+<style>
+    .seat-page {
+        padding: 30px 0 60px;
+    }
+
+    .info-card {
+        border: none;
+        border-radius: 18px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
+    }
+
+    .seat-card {
+        border-radius: 14px;
+        border: 2px solid #dee2e6;
+        background: #ffffff;
+        min-height: 90px;
+        transition: all 0.2s ease;
+    }
+
+    .seat-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .seat-card.available {
+        border-color: #198754;
+        background: #f1fff7;
+    }
+
+    .seat-card.booked {
+        border-color: #dc3545;
+        background: #fff2f2;
+    }
+
+    .seat-number {
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .seat-status {
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .sleeper-floor {
+        border-radius: 18px;
+        background: #f8f9fa;
+        padding: 20px;
+        height: 100%;
+    }
+
+    .floor-title {
+        font-weight: 700;
+        margin-bottom: 18px;
+    }
+
+    .driver-area {
+        border: 2px dashed #adb5bd;
+        border-radius: 12px;
+        padding: 12px;
+        text-align: center;
+        color: #6c757d;
+        margin-bottom: 20px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-right: 20px;
+    }
+
+    .legend-box {
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        border: 2px solid #dee2e6;
+    }
+
+    .legend-available {
+        background: #f1fff7;
+        border-color: #198754;
+    }
+
+    .legend-booked {
+        background: #fff2f2;
+        border-color: #dc3545;
+    }
+
+    .action-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    @@media (max-width: 768px) {
+        .seat-page {
+            padding: 20px 10px 40px;
+        }
+    }
+</style>
+
+
+<div class="container-fluid seat-page">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+
+                @if (isSleeper)
+                {
+                    <span>🛏️ Sơ đồ giường nằm</span>
+                }
+                else
+                {
+                    <span>💺 Sơ đồ ghế ngồi</span>
+                }
+
+            </h2>
+
+            <p class="text-muted mb-0">
+
+                Quản lý trạng thái ghế/giường của chuyến xe.
+
+            </p>
+
+        </div>
+
+        <a asp-action="Index"
+           class="btn btn-outline-secondary">
+
+            ← Danh sách
+
+        </a>
+
+    </div>
+
+
+    <!-- THÔNG TIN CHUYẾN -->
+
+    @if (trip != null)
+    {
+        <div class="card info-card mb-4">
+
+            <div class="card-body">
+
+                <div class="row g-4">
+
+                    <div class="col-lg-3">
+
+                        <div class="text-muted small">
+                            Tuyến
+                        </div>
+
+                        <div class="fw-bold mt-1">
+
+                            @trip.Route?.Departure
+                            →
+                            @trip.Route?.Destination
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-lg-2">
+
+                        <div class="text-muted small">
+                            Nhà xe
+                        </div>
+
+                        <div class="fw-bold mt-1">
+                            @trip.BusCompany?.Name
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-lg-2">
+
+                        <div class="text-muted small">
+                            Biển số
+                        </div>
+
+                        <div class="fw-bold mt-1">
+                            @trip.Bus?.LicensePlate
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-lg-2">
+
+                        <div class="text-muted small">
+                            Khởi hành
+                        </div>
+
+                        <div class="fw-bold mt-1">
+                            @trip.DepartureTime
+                                .ToString("dd/MM/yyyy HH:mm")
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-lg-3">
+
+                        <div class="text-muted small">
+                            Loại xe
+                        </div>
+
+                        <div class="fw-bold mt-1">
+
+                            @if (isSleeper)
+                            {
+                                <span>
+                                    🛏️ Xe giường nằm 24 chỗ
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    💺 Xe ghế ngồi 45 chỗ
+                                </span>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+
+    <!-- THỐNG KÊ -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-md-4">
+
+            <div class="card info-card">
+
+                <div class="card-body text-center">
+
+                    <div class="text-muted">
+                        Tổng số
+                    </div>
+
+                    <div class="display-6 fw-bold">
+                        @totalSeats
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card info-card">
+
+                <div class="card-body text-center">
+
+                    <div class="text-muted">
+                        Đã đặt
+                    </div>
+
+                    <div class="display-6 fw-bold text-danger">
+                        @bookedSeats
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4">
+
+            <div class="card info-card">
+
+                <div class="card-body text-center">
+
+                    <div class="text-muted">
+                        Còn trống
+                    </div>
+
+                    <div class="display-6 fw-bold text-success">
+                        @availableSeats
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTION -->
+
+    <div class="card info-card mb-4">
+
+        <div class="card-body">
+
+            <div class="action-row">
+
+                <form asp-action="Reset"
+                      method="post"
+                      onsubmit="return confirm('Bạn có chắc muốn tạo lại toàn bộ sơ đồ ghế/giường?');">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           name="tripId"
+                           value="@trip?.Id" />
+
+                    <button type="submit"
+                            class="btn btn-warning">
+
+                        🔄 Tạo lại sơ đồ
+
+                    </button>
+
+                </form>
+
+
+                <a asp-controller="AdminTrips"
+                   asp-action="Details"
+                   asp-route-id="@trip?.Id"
+                   class="btn btn-outline-primary">
+
+                    🚍 Xem chuyến xe
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- CHÚ THÍCH -->
+
+    <div class="d-flex flex-wrap mb-4">
+
+        <div class="legend-item">
+
+            <span class="legend-box legend-available"></span>
+
+            <span>
+                Còn trống
+            </span>
+
+        </div>
+
+
+        <div class="legend-item">
+
+            <span class="legend-box legend-booked"></span>
+
+            <span>
+                Đã đặt
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         XE GHẾ NGỒI
+         ========================= -->
+
+    @if (!isSleeper)
+    {
+        <div class="card info-card">
+
+            <div class="card-body">
+
+                <div class="driver-area">
+                    🚍 Khu vực tài xế
+                </div>
+
+                <div class="row g-3">
+
+                    @foreach (var seat in Model)
+                    {
+                        <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+
+                            <div class="seat-card @(seat.IsBooked ? "booked" : "available")">
+
+                                <div class="card-body text-center">
+
+                                    <div class="seat-number">
+
+                                        @if (seat.IsBooked)
+                                        {
+                                            <span>🔴</span>
+                                        }
+                                        else
+                                        {
+                                            <span>🟢</span>
+                                        }
+
+                                        @seat.SeatNumber
+
+                                    </div>
+
+                                    <div class="seat-status">
+
+                                        @if (seat.IsBooked)
+                                        {
+                                            <span class="text-danger">
+                                                Đã đặt
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-success">
+                                                Còn trống
+                                            </span>
+                                        }
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+
+    <!-- =========================
+         XE GIƯỜNG NẰM
+         ========================= -->
+
+    @if (isSleeper)
+    {
+        var floorA = Model
+            .Where(s => s.SeatNumber.StartsWith("A"))
+            .OrderBy(s => s.SeatNumber)
+            .ToList();
+
+        var floorB = Model
+            .Where(s => s.SeatNumber.StartsWith("B"))
+            .OrderBy(s => s.SeatNumber)
+            .ToList();
+
+        <div class="row g-4">
+
+            <!-- TẦNG A -->
+
+            <div class="col-lg-6">
+
+                <div class="sleeper-floor">
+
+                    <div class="floor-title">
+                        🛏️ Tầng A
+                    </div>
+
+                    <div class="row g-3">
+
+                        @foreach (var seat in floorA)
+                        {
+                            <div class="col-6">
+
+                                <div class="seat-card @(seat.IsBooked ? "booked" : "available")">
+
+                                    <div class="card-body text-center">
+
+                                        <div class="seat-number">
+
+                                            @if (seat.IsBooked)
+                                            {
+                                                <span>🔴</span>
+                                            }
+                                            else
+                                            {
+                                                <span>🟢</span>
+                                            }
+
+                                            @seat.SeatNumber
+
+                                        </div>
+
+                                        <div class="seat-status">
+
+                                            @if (seat.IsBooked)
+                                            {
+                                                <span class="text-danger">
+                                                    Đã đặt
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-success">
+                                                    Còn trống
+                                                </span>
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- TẦNG B -->
+
+            <div class="col-lg-6">
+
+                <div class="sleeper-floor">
+
+                    <div class="floor-title">
+                        🛏️ Tầng B
+                    </div>
+
+                    <div class="row g-3">
+
+                        @foreach (var seat in floorB)
+                        {
+                            <div class="col-6">
+
+                                <div class="seat-card @(seat.IsBooked ? "booked" : "available")">
+
+                                    <div class="card-body text-center">
+
+                                        <div class="seat-number">
+
+                                            @if (seat.IsBooked)
+                                            {
+                                                <span>🔴</span>
+                                            }
+                                            else
+                                            {
+                                                <span>🟢</span>
+                                            }
+
+                                            @seat.SeatNumber
+
+                                        </div>
+
+                                        <div class="seat-status">
+
+                                            @if (seat.IsBooked)
+                                            {
+                                                <span class="text-danger">
+                                                    Đã đặt
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-success">
+                                                    Còn trống
+                                                </span>
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+
+    <div class="mt-4">
+
+        <a asp-action="Index"
+           class="btn btn-outline-secondary">
+
+            ← Quay lại danh sách
+
+        </a>
+
+    </div>
+
+</div>

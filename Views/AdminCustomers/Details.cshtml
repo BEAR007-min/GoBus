@@ -1,0 +1,529 @@
+@model GoBus.Models.Customer
+
+@{
+    ViewData["Title"] = "Chi tiết Khách hàng";
+
+    var user = ViewBag.User as GoBus.Models.User;
+
+    var totalBookings = Model.Bookings.Count;
+
+    var confirmedBookings =
+        Model.Bookings.Count(b => b.Status == "Confirmed");
+
+    var cancelledBookings =
+        Model.Bookings.Count(b => b.Status == "Cancelled");
+
+    var totalSpent =
+        Model.Bookings
+            .Where(b => b.Status == "Confirmed")
+            .Sum(b => b.TotalAmount);
+}
+
+<style>
+    .details-page {
+        padding: 30px 0 50px;
+    }
+
+    .info-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+        height: 100%;
+    }
+
+    .section-title {
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .info-label {
+        color: #6c757d;
+        font-size: 14px;
+        margin-bottom: 3px;
+    }
+
+    .info-value {
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .customer-avatar-large {
+        width: 85px;
+        height: 85px;
+        border-radius: 50%;
+        background: #e7f1ff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        margin: 0 auto 15px;
+    }
+
+    .customer-name-large {
+        font-size: 25px;
+        font-weight: 700;
+    }
+
+    .stat-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+    }
+
+    .stat-number {
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .booking-row {
+        border: 1px solid #dee2e6;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 12px;
+    }
+</style>
+
+<div class="container-fluid details-page">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+                👤 Chi tiết Khách hàng
+            </h2>
+
+            <p class="text-muted mb-0">
+                Thông tin và lịch sử đặt vé
+            </p>
+
+        </div>
+
+        <div class="d-flex gap-2">
+
+            <a asp-action="Edit"
+               asp-route-id="@Model.Id"
+               class="btn btn-warning">
+                ✏️ Chỉnh sửa
+            </a>
+
+            <a asp-action="Index"
+               class="btn btn-outline-secondary">
+                ← Quay lại
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- THÔNG BÁO -->
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+
+            @TempData["SuccessMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+
+            @TempData["ErrorMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+
+    <!-- THÔNG TIN KHÁCH HÀNG -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-4">
+
+            <div class="card info-card">
+
+                <div class="card-body text-center">
+
+                    <div class="customer-avatar-large">
+                        👤
+                    </div>
+
+                    <div class="customer-name-large">
+                        @Model.FullName
+                    </div>
+
+                    <div class="text-muted">
+                        Khách hàng #@Model.Id
+                    </div>
+
+                    <hr />
+
+                    <div class="text-start">
+
+                        <div class="mb-3">
+
+                            <div class="info-label">
+                                📱 Số điện thoại
+                            </div>
+
+                            <div class="info-value">
+                                @Model.Phone
+                            </div>
+
+                        </div>
+
+
+                        <div class="mb-3">
+
+                            <div class="info-label">
+                                📧 Email
+                            </div>
+
+                            <div class="info-value">
+                                @Model.Email
+                            </div>
+
+                        </div>
+
+
+                        <div>
+
+                            <div class="info-label">
+                                🔐 Tài khoản
+                            </div>
+
+                            @if (user != null)
+                            {
+                                <div class="info-value">
+
+                                    @user.Username
+
+                                    <span class="badge bg-secondary ms-1">
+                                        @user.Role
+                                    </span>
+
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="text-muted">
+                                    Chưa có tài khoản
+                                </div>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- THỐNG KÊ -->
+
+        <div class="col-lg-8">
+
+            <div class="row g-4">
+
+                <div class="col-md-4">
+
+                    <div class="card stat-card">
+
+                        <div class="card-body text-center">
+
+                            <div class="text-muted">
+                                Tổng vé
+                            </div>
+
+                            <div class="stat-number text-primary">
+                                @totalBookings
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <div class="card stat-card">
+
+                        <div class="card-body text-center">
+
+                            <div class="text-muted">
+                                Vé xác nhận
+                            </div>
+
+                            <div class="stat-number text-success">
+                                @confirmedBookings
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <div class="card stat-card">
+
+                        <div class="card-body text-center">
+
+                            <div class="text-muted">
+                                Vé đã hủy
+                            </div>
+
+                            <div class="stat-number text-danger">
+                                @cancelledBookings
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-12">
+
+                    <div class="card stat-card">
+
+                        <div class="card-body">
+
+                            <div class="text-muted">
+                                💰 Tổng tiền đã xác nhận
+                            </div>
+
+                            <div class="stat-number text-success">
+                                @totalSpent.ToString("N0") ₫
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- LỊCH SỬ ĐẶT VÉ -->
+
+    <div class="card info-card">
+
+        <div class="card-body">
+
+            <h5 class="section-title">
+                🎫 Lịch sử đặt vé
+            </h5>
+
+            @if (!Model.Bookings.Any())
+            {
+                <div class="text-center py-5">
+
+                    <div style="font-size: 45px;">
+                        🎫
+                    </div>
+
+                    <h5 class="mt-3">
+                        Chưa có lịch sử đặt vé
+                    </h5>
+
+                    <p class="text-muted">
+                        Khách hàng này chưa thực hiện đặt vé.
+                    </p>
+
+                </div>
+            }
+            else
+            {
+                @foreach (var booking in Model.Bookings
+                    .OrderByDescending(b => b.BookingDate))
+                {
+                    <div class="booking-row">
+
+                        <div class="row g-3 align-items-center">
+
+                            <!-- MÃ VÉ -->
+
+                            <div class="col-md-2">
+
+                                <div class="info-label">
+                                    Mã vé
+                                </div>
+
+                                <div class="info-value">
+                                    #@booking.Id
+                                </div>
+
+                            </div>
+
+
+                            <!-- TUYẾN -->
+
+                            <div class="col-md-4">
+
+                                <div class="info-label">
+                                    Tuyến
+                                </div>
+
+                                <div class="info-value">
+
+                                    @booking.Trip?.Route?.Departure
+
+                                    <span class="text-muted">
+                                        →
+                                    </span>
+
+                                    @booking.Trip?.Route?.Destination
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- NGÀY ĐẶT -->
+
+                            <div class="col-md-2">
+
+                                <div class="info-label">
+                                    Ngày đặt
+                                </div>
+
+                                <div class="info-value">
+                                    @booking.BookingDate
+                                        .ToString("dd/MM/yyyy")
+                                </div>
+
+                            </div>
+
+
+                            <!-- TIỀN -->
+
+                            <div class="col-md-2">
+
+                                <div class="info-label">
+                                    Tổng tiền
+                                </div>
+
+                                <div class="info-value">
+                                    @booking.TotalAmount.ToString("N0") ₫
+                                </div>
+
+                            </div>
+
+
+                            <!-- TRẠNG THÁI -->
+
+                            <div class="col-md-2">
+
+                                @if (booking.Status == "Confirmed")
+                                {
+                                    <span class="badge bg-success">
+                                        Đã xác nhận
+                                    </span>
+                                }
+                                else if (booking.Status == "Cancelled")
+                                {
+                                    <span class="badge bg-danger">
+                                        Đã hủy
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">
+                                        @booking.Status
+                                    </span>
+                                }
+
+                                <div class="mt-2">
+
+                                    <a asp-controller="AdminBookings"
+                                       asp-action="Details"
+                                       asp-route-id="@booking.Id"
+                                       class="btn btn-sm btn-outline-primary">
+                                        Xem vé
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                }
+            }
+
+        </div>
+
+    </div>
+
+
+    <!-- XÓA KHÁCH HÀNG -->
+
+    @if (!Model.Bookings.Any())
+    {
+        <div class="card border-danger mt-4">
+
+            <div class="card-body">
+
+                <h5 class="text-danger">
+                    ⚠️ Xóa khách hàng
+                </h5>
+
+                <p class="text-muted">
+                    Khách hàng chưa có lịch sử đặt vé.
+                    Bạn có thể xóa khách hàng này khỏi hệ thống.
+                </p>
+
+                <form asp-action="Delete"
+                      method="post"
+                      onsubmit="return confirm('Bạn có chắc chắn muốn xóa khách hàng này không?');">
+
+                    @Html.AntiForgeryToken()
+
+                    <input type="hidden"
+                           name="id"
+                           value="@Model.Id" />
+
+                    <button type="submit"
+                            class="btn btn-danger">
+                        🗑️ Xóa khách hàng
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+    }
+
+</div>

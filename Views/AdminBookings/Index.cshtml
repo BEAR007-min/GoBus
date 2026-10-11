@@ -1,0 +1,522 @@
+@model IEnumerable<GoBus.Models.Booking>
+
+@{
+    ViewData["Title"] = "Quản lý Vé";
+
+    var currentStatus = ViewBag.Status as string ?? "All";
+}
+
+<style>
+    .booking-page {
+        padding: 30px 0 50px;
+    }
+
+    .page-header {
+        margin-bottom: 25px;
+    }
+
+    .page-header h2 {
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .page-header p {
+        color: #6c757d;
+        margin-bottom: 0;
+    }
+
+    .filter-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+    }
+
+    .table-card {
+        border: none;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+    }
+
+    .table th {
+        white-space: nowrap;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+    .route-text {
+        font-weight: 600;
+    }
+
+    .customer-name {
+        font-weight: 600;
+    }
+
+    .amount {
+        font-weight: 700;
+    }
+
+    .seat-badge {
+        display: inline-block;
+        margin: 2px;
+    }
+
+    @@media (max-width: 768px) {
+        .booking-page {
+            padding: 20px 10px 40px;
+        }
+    }
+</style>
+
+<div class="container-fluid booking-page">
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <h2>
+            🎫 Quản lý Vé
+        </h2>
+
+        <p>
+            Xem và quản lý tất cả vé được đặt trong hệ thống GoBus.
+        </p>
+
+    </div>
+
+
+    <!-- THÔNG BÁO -->
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+
+            @TempData["SuccessMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+
+            @TempData["ErrorMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+
+    <!-- TÌM KIẾM + LỌC -->
+
+    <div class="card filter-card mb-4">
+
+        <div class="card-body">
+
+            <form asp-action="Index"
+                  method="get">
+
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-lg-6">
+
+                        <label class="form-label fw-semibold">
+                            Tìm kiếm
+                        </label>
+
+                        <input type="text"
+                               name="search"
+                               value="@ViewBag.Search"
+                               class="form-control"
+                               placeholder="Mã vé, tên khách, SĐT, email, tuyến, nhà xe..." />
+
+                    </div>
+
+
+                    <div class="col-lg-3">
+
+                        <label class="form-label fw-semibold">
+                            Trạng thái
+                        </label>
+
+                        <select name="status"
+                                class="form-select">
+
+                            @if (currentStatus == "All")
+                            {
+                                <option value="All" selected>
+                                    Tất cả
+                                </option>
+                            }
+                            else
+                            {
+                                <option value="All">
+                                    Tất cả
+                                </option>
+                            }
+
+                            @if (currentStatus == "Confirmed")
+                            {
+                                <option value="Confirmed" selected>
+                                    Đã xác nhận
+                                </option>
+                            }
+                            else
+                            {
+                                <option value="Confirmed">
+                                    Đã xác nhận
+                                </option>
+                            }
+
+                            @if (currentStatus == "Cancelled")
+                            {
+                                <option value="Cancelled" selected>
+                                    Đã hủy
+                                </option>
+                            }
+                            else
+                            {
+                                <option value="Cancelled">
+                                    Đã hủy
+                                </option>
+                            }
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="col-lg-3 d-flex gap-2">
+
+                        <button type="submit"
+                                class="btn btn-primary flex-fill">
+                            🔍 Tìm kiếm
+                        </button>
+
+                        <a asp-action="Index"
+                           class="btn btn-outline-secondary">
+                            Xóa
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- DANH SÁCH VÉ -->
+
+    <div class="card table-card">
+
+        <div class="card-header bg-white py-3">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <h5 class="fw-bold mb-0">
+                    Danh sách vé
+                </h5>
+
+                <span class="badge bg-primary">
+                    @Model.Count() vé
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            @if (!Model.Any())
+            {
+                <div class="text-center py-5">
+
+                    <div style="font-size: 50px;">
+                        🎫
+                    </div>
+
+                    <h5 class="mt-3">
+                        Không tìm thấy vé
+                    </h5>
+
+                    <p class="text-muted">
+                        Chưa có vé phù hợp với điều kiện tìm kiếm.
+                    </p>
+
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+
+                    <table class="table table-hover mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th>
+                                    Mã vé
+                                </th>
+
+                                <th>
+                                    Khách hàng
+                                </th>
+
+                                <th>
+                                    Tuyến
+                                </th>
+
+                                <th>
+                                    Nhà xe
+                                </th>
+
+                                <th>
+                                    Ghế / Giường
+                                </th>
+
+                                <th>
+                                    Ngày đặt
+                                </th>
+
+                                <th>
+                                    Tổng tiền
+                                </th>
+
+                                <th>
+                                    Trạng thái
+                                </th>
+
+                                <th class="text-center">
+                                    Thao tác
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            @foreach (var booking in Model)
+                            {
+                                <tr>
+
+                                    <!-- MÃ VÉ -->
+
+                                    <td>
+
+                                        <span class="fw-bold">
+                                            #@booking.Id
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- KHÁCH HÀNG -->
+
+                                    <td>
+
+                                        @if (booking.Customer != null)
+                                        {
+                                            <div class="customer-name">
+                                                @booking.Customer.FullName
+                                            </div>
+
+                                            <div class="small text-muted">
+                                                @booking.Customer.Phone
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Không có dữ liệu
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <!-- TUYẾN -->
+
+                                    <td>
+
+                                        @if (booking.Trip?.Route != null)
+                                        {
+                                            <div class="route-text">
+
+                                                @booking.Trip.Route.Departure
+
+                                                <span class="text-muted">
+                                                    →
+                                                </span>
+
+                                                @booking.Trip.Route.Destination
+
+                                            </div>
+
+                                            <div class="small text-muted">
+
+                                                @booking.Trip.DepartureTime
+                                                    .ToString("dd/MM/yyyy HH:mm")
+
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Không có dữ liệu
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <!-- NHÀ XE -->
+
+                                    <td>
+
+                                        @booking.Trip?.BusCompany?.Name
+
+                                        <div class="small text-muted">
+
+                                            @booking.Trip?.Bus?.LicensePlate
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- GHẾ -->
+
+                                    <td>
+
+                                        @if (booking.BookingDetails.Any())
+                                        {
+                                            foreach (var detail in booking.BookingDetails)
+                                            {
+                                                if (detail.Seat != null)
+                                                {
+                                                    <span class="badge bg-light text-dark border seat-badge">
+                                                        @detail.Seat.SeatNumber
+                                                    </span>
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                -
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <!-- NGÀY ĐẶT -->
+
+                                    <td>
+
+                                        @booking.BookingDate
+                                            .ToString("dd/MM/yyyy HH:mm")
+
+                                    </td>
+
+
+                                    <!-- TỔNG TIỀN -->
+
+                                    <td>
+
+                                        <span class="amount">
+                                            @booking.TotalAmount.ToString("N0") ₫
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- TRẠNG THÁI -->
+
+                                    <td>
+
+                                        @if (booking.Status == "Confirmed")
+                                        {
+                                            <span class="badge bg-success">
+                                                Đã xác nhận
+                                            </span>
+                                        }
+                                        else if (booking.Status == "Cancelled")
+                                        {
+                                            <span class="badge bg-danger">
+                                                Đã hủy
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                @booking.Status
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <!-- THAO TÁC -->
+
+                                    <td>
+
+                                        <div class="d-flex justify-content-center">
+
+                                            <a asp-action="Details"
+                                               asp-route-id="@booking.Id"
+                                               class="btn btn-sm btn-outline-primary">
+                                                👁 Xem
+                                            </a>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+
+    <!-- QUAY LẠI -->
+
+    <div class="mt-3">
+
+        <a asp-controller="Admin"
+           asp-action="Index"
+           class="btn btn-outline-secondary">
+            ← Quay lại Dashboard
+        </a>
+
+    </div>
+
+</div>

@@ -6,623 +6,993 @@
 
 <style>
     .admin-page {
-        padding: 30px;
-        background: #f8fafc;
-        min-height: calc(100vh - 70px);
+        padding: 30px 0 60px;
     }
 
-    .admin-header {
+    .dashboard-header {
         margin-bottom: 30px;
     }
 
-    .admin-title {
-        margin: 0;
-        font-size: 32px;
-        font-weight: 800;
-        color: #0f172a;
+    .dashboard-header h2 {
+        font-weight: 700;
+        margin-bottom: 6px;
     }
 
-    .admin-description {
-        margin-top: 8px;
-        color: #64748b;
-        font-size: 15px;
+    .dashboard-header p {
+        color: #6c757d;
+        margin-bottom: 0;
     }
 
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 18px;
-        margin-bottom: 30px;
-    }
+    /* =========================
+       STAT CARDS
+       ========================= */
 
     .stat-card {
-        background: white;
-        border-radius: 16px;
-        padding: 22px;
-        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.06);
-        border: 1px solid #e2e8f0;
+        border: none;
+        border-radius: 18px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
+        height: 100%;
+        transition: all 0.2s ease;
     }
 
-    .stat-top {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
     }
 
     .stat-icon {
-        width: 46px;
-        height: 46px;
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
         display: flex;
         align-items: center;
         justify-content: center;
-        border-radius: 12px;
-        font-size: 22px;
-        background: #eff6ff;
+        font-size: 25px;
     }
 
-    .stat-label {
-        color: #64748b;
+    .stat-title {
+        color: #6c757d;
+        margin-top: 15px;
         font-size: 14px;
-        font-weight: 600;
     }
 
-    .stat-value {
+    .stat-number {
         font-size: 28px;
-        font-weight: 800;
-        color: #0f172a;
+        font-weight: 700;
+        margin-top: 5px;
     }
+
+    /* =========================
+       MANAGEMENT
+       ========================= */
 
     .section-title {
-        font-size: 21px;
-        font-weight: 750;
-        color: #0f172a;
-        margin-bottom: 16px;
-    }
-
-    .management-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 18px;
-        margin-bottom: 30px;
+        font-weight: 700;
+        margin-bottom: 20px;
     }
 
     .management-card {
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-radius: 16px;
-        padding: 22px;
-        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
-        transition: 0.2s;
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 24px;
+        height: 100%;
+        border: 1px solid #eef0f2;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+        transition: all 0.2s ease;
     }
 
     .management-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.09);
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     }
 
     .management-icon {
-        font-size: 32px;
-        margin-bottom: 12px;
+        width: 58px;
+        height: 58px;
+        border-radius: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        background: #f1f3f5;
+        margin-bottom: 18px;
     }
 
-    .management-name {
-        font-size: 17px;
-        font-weight: 750;
-        color: #0f172a;
-        margin-bottom: 7px;
+    .management-card h5 {
+        font-weight: 700;
+        margin-bottom: 8px;
     }
 
-    .management-description {
-        color: #64748b;
-        font-size: 13px;
-        line-height: 1.5;
-        min-height: 40px;
-        margin-bottom: 16px;
+    .management-card p {
+        color: #6c757d;
+        min-height: 48px;
+        margin-bottom: 18px;
+        font-size: 14px;
     }
 
     .management-button {
         display: inline-block;
-        padding: 9px 15px;
-        background: #2563eb;
-        color: white;
+        width: 100%;
+        text-align: center;
+        padding: 10px 15px;
+        border-radius: 10px;
+        background: #0d6efd;
+        color: #ffffff;
         text-decoration: none;
-        border-radius: 9px;
-        font-size: 13px;
-        font-weight: 700;
+        font-weight: 600;
+        transition: all 0.2s ease;
     }
 
     .management-button:hover {
-        background: #1d4ed8;
-        color: white;
+        background: #0b5ed7;
+        color: #ffffff;
     }
 
-    .dashboard-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-    }
+    /* =========================
+       REVENUE
+       ========================= */
 
-    .dashboard-card {
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-radius: 16px;
-        padding: 24px;
-        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
-    }
-
-    .dashboard-card-title {
-        font-size: 18px;
-        font-weight: 750;
-        color: #0f172a;
-        margin-bottom: 20px;
+    .revenue-card {
+        border: none;
+        border-radius: 18px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
+        height: 100%;
     }
 
     .revenue-value {
         font-size: 30px;
-        font-weight: 800;
-        color: #16a34a;
+        font-weight: 700;
     }
 
     .revenue-label {
-        color: #64748b;
+        color: #6c757d;
         font-size: 14px;
-        margin-top: 5px;
     }
 
-    .booking-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 13px 0;
-        border-bottom: 1px solid #e2e8f0;
+    /* =========================
+       BOOKING STATUS
+       ========================= */
+
+    .status-card {
+        border: none;
+        border-radius: 18px;
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.07);
     }
 
-    .booking-row:last-child {
-        border-bottom: none;
+    .status-number {
+        font-size: 26px;
+        font-weight: 700;
     }
 
-    .booking-label {
-        color: #475569;
-        font-weight: 600;
-    }
-
-    .booking-value {
-        font-size: 18px;
-        font-weight: 800;
-        color: #0f172a;
-    }
-
-    .confirmed {
-        color: #16a34a;
-    }
-
-    .cancelled {
-        color: #dc2626;
-    }
-
-    .today-box {
-        margin-top: 20px;
+    .status-item {
         padding: 15px;
-        background: #eff6ff;
         border-radius: 12px;
-        color: #1d4ed8;
-        font-weight: 650;
+        background: #f8f9fa;
     }
 
-    @@media (max-width: 1100px) {
-        .stats-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
+    /* =========================
+       QUICK ACTION
+       ========================= */
 
-        .management-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
+    .quick-action {
+        border-radius: 15px;
+        padding: 18px;
+        background: #f8f9fa;
+        text-decoration: none;
+        color: #212529;
+        display: block;
+        transition: all 0.2s ease;
     }
 
-    @@media (max-width: 700px) {
+    .quick-action:hover {
+        background: #e9ecef;
+        color: #212529;
+        transform: translateY(-2px);
+    }
+
+    .quick-icon {
+        font-size: 25px;
+        margin-right: 10px;
+    }
+
+    @@media (max-width: 768px) {
         .admin-page {
-            padding: 18px;
+            padding: 20px 10px 40px;
         }
 
-        .stats-grid,
-        .management-grid,
-        .dashboard-grid {
-            grid-template-columns: 1fr;
+        .stat-number {
+            font-size: 24px;
         }
 
-        .admin-title {
-            font-size: 26px;
+        .revenue-value {
+            font-size: 25px;
         }
     }
 </style>
 
-<div class="admin-page">
 
-    <!-- HEADER -->
-    <div class="admin-header">
-        <h1 class="admin-title">
+<div class="container-fluid admin-page">
+
+    <!-- =====================================
+         HEADER
+         ===================================== -->
+
+    <div class="dashboard-header">
+
+        <h2>
             🛠️ Admin Dashboard
-        </h1>
+        </h2>
 
-        <p class="admin-description">
+        <p>
             Quản lý và theo dõi toàn bộ hệ thống GoBus.
         </p>
-    </div>
-
-
-    <!-- THỐNG KÊ -->
-    <div class="stats-grid">
-
-        <div class="stat-card">
-            <div class="stat-top">
-                <span class="stat-label">Khách hàng</span>
-                <div class="stat-icon">👥</div>
-            </div>
-
-            <div class="stat-value">
-                @Model.TotalCustomers
-            </div>
-        </div>
-
-
-        <div class="stat-card">
-            <div class="stat-top">
-                <span class="stat-label">Nhà xe</span>
-                <div class="stat-icon">🏢</div>
-            </div>
-
-            <div class="stat-value">
-                @Model.TotalBusCompanies
-            </div>
-        </div>
-
-
-        <div class="stat-card">
-            <div class="stat-top">
-                <span class="stat-label">Xe</span>
-                <div class="stat-icon">🚌</div>
-            </div>
-
-            <div class="stat-value">
-                @Model.TotalBuses
-            </div>
-        </div>
-
-
-        <div class="stat-card">
-            <div class="stat-top">
-                <span class="stat-label">Tuyến đường</span>
-                <div class="stat-icon">🛣️</div>
-            </div>
-
-            <div class="stat-value">
-                @Model.TotalRoutes
-            </div>
-        </div>
-
-
-        <div class="stat-card">
-            <div class="stat-top">
-                <span class="stat-label">Chuyến xe</span>
-                <div class="stat-icon">🚍</div>
-            </div>
-
-            <div class="stat-value">
-                @Model.TotalTrips
-            </div>
-        </div>
-
-
-        <div class="stat-card">
-            <div class="stat-top">
-                <span class="stat-label">Vé đã đặt</span>
-                <div class="stat-icon">🎫</div>
-            </div>
-
-            <div class="stat-value">
-                @Model.TotalBookings
-            </div>
-        </div>
-
-
-        <div class="stat-card">
-            <div class="stat-top">
-                <span class="stat-label">Tài khoản</span>
-                <div class="stat-icon">👤</div>
-            </div>
-
-            <div class="stat-value">
-                @Model.TotalUsers
-            </div>
-        </div>
-
-
-        <div class="stat-card">
-            <div class="stat-top">
-                <span class="stat-label">Chuyến hôm nay</span>
-                <div class="stat-icon">📅</div>
-            </div>
-
-            <div class="stat-value">
-                @Model.TodayTrips
-            </div>
-        </div>
 
     </div>
 
 
-    <!-- QUẢN LÝ -->
-    <div class="section-title">
-        ⚙️ Quản lý hệ thống
-    </div>
+    <!-- =====================================
+         THÔNG BÁO
+         ===================================== -->
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+
+            @TempData["SuccessMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+
+            @TempData["ErrorMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
 
 
-    <div class="management-grid">
+    <!-- =====================================
+         THỐNG KÊ TỔNG QUAN
+         ===================================== -->
+
+    <h4 class="section-title">
+        📊 Tổng quan hệ thống
+    </h4>
+
+    <div class="row g-4 mb-5">
+
+        <!-- KHÁCH HÀNG -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card stat-card">
+
+                <div class="card-body">
+
+                    <div class="stat-icon bg-primary-subtle">
+                        👥
+                    </div>
+
+                    <div class="stat-title">
+                        Khách hàng
+                    </div>
+
+                    <div class="stat-number text-primary">
+                        @Model.TotalCustomers
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- TÀI KHOẢN -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card stat-card">
+
+                <div class="card-body">
+
+                    <div class="stat-icon bg-secondary-subtle">
+                        👤
+                    </div>
+
+                    <div class="stat-title">
+                        Tài khoản
+                    </div>
+
+                    <div class="stat-number">
+                        @Model.TotalUsers
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
 
         <!-- NHÀ XE -->
-        <div class="management-card">
 
-            <div class="management-icon">
-                🏢
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card stat-card">
+
+                <div class="card-body">
+
+                    <div class="stat-icon bg-success-subtle">
+                        🏢
+                    </div>
+
+                    <div class="stat-title">
+                        Nhà xe
+                    </div>
+
+                    <div class="stat-number text-success">
+                        @Model.TotalBusCompanies
+                    </div>
+
+                </div>
+
             </div>
-
-            <div class="management-name">
-                Quản lý Nhà xe
-            </div>
-
-            <div class="management-description">
-                Thêm, sửa, xem và xóa thông tin các nhà xe.
-            </div>
-
-            <a asp-controller="AdminBusCompanies"
-               asp-action="Index"
-               class="management-button">
-                Quản lý
-            </a>
 
         </div>
 
 
         <!-- XE -->
-        <div class="management-card">
 
-            <div class="management-icon">
-                🚌
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card stat-card">
+
+                <div class="card-body">
+
+                    <div class="stat-icon bg-info-subtle">
+                        🚌
+                    </div>
+
+                    <div class="stat-title">
+                        Xe
+                    </div>
+
+                    <div class="stat-number text-info">
+                        @Model.TotalBuses
+                    </div>
+
+                </div>
+
             </div>
-
-            <a asp-controller="AdminBuses"
-            asp-action="Index"
-            class="management-button">
-                Quản lý
-            </a>
-
-            <div class="management-description">
-                Quản lý xe, biển số, loại xe và số lượng ghế.
-            </div>
-
-            <a href="#"
-               class="management-button">
-                Quản lý
-            </a>
 
         </div>
 
 
         <!-- TUYẾN -->
-        <div class="management-card">
 
-            <div class="management-icon">
-                🛣️
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card stat-card">
+
+                <div class="card-body">
+
+                    <div class="stat-icon bg-warning-subtle">
+                        🛣️
+                    </div>
+
+                    <div class="stat-title">
+                        Tuyến
+                    </div>
+
+                    <div class="stat-number text-warning">
+                        @Model.TotalRoutes
+                    </div>
+
+                </div>
+
             </div>
-
-           <a asp-controller="AdminRoutes"
-            asp-action="Index"
-            class="management-button">
-                Quản lý
-            </a>
-
-            <div class="management-description">
-                Quản lý điểm đi, điểm đến và thời gian di chuyển.
-            </div>
-
-            <a href="#"
-               class="management-button">
-                Quản lý
-            </a>
 
         </div>
 
 
         <!-- CHUYẾN -->
-        <div class="management-card">
 
-            <div class="management-icon">
-                🚍
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card stat-card">
+
+                <div class="card-body">
+
+                    <div class="stat-icon bg-primary-subtle">
+                        🚍
+                    </div>
+
+                    <div class="stat-title">
+                        Chuyến
+                    </div>
+
+                    <div class="stat-number text-primary">
+                        @Model.TotalTrips
+                    </div>
+
+                </div>
+
             </div>
-
-            <div class="management-name">
-                Quản lý Chuyến
-            </div>
-
-            <div class="management-description">
-                Quản lý lịch chạy, giá vé và số ghế còn lại.
-            </div>
-
-            <a href="#"
-               class="management-button">
-                Quản lý
-            </a>
 
         </div>
 
 
-        <!-- GHẾ -->
-        <div class="management-card">
+        <!-- TỔNG VÉ -->
 
-            <div class="management-icon">
-                💺
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card stat-card">
+
+                <div class="card-body">
+
+                    <div class="stat-icon bg-danger-subtle">
+                        🎫
+                    </div>
+
+                    <div class="stat-title">
+                        Tổng vé
+                    </div>
+
+                    <div class="stat-number text-danger">
+                        @Model.TotalBookings
+                    </div>
+
+                </div>
+
             </div>
-
-            <div class="management-name">
-                Quản lý Ghế / Giường
-            </div>
-
-            <div class="management-description">
-                Quản lý sơ đồ ghế và giường theo từng chuyến.
-            </div>
-
-            <a href="#"
-               class="management-button">
-                Quản lý
-            </a>
 
         </div>
 
 
-        <!-- VÉ -->
-        <div class="management-card">
+        <!-- CHUYẾN HÔM NAY -->
 
-            <div class="management-icon">
-                🎫
+        <div class="col-xl-3 col-md-6">
+
+            <div class="card stat-card">
+
+                <div class="card-body">
+
+                    <div class="stat-icon bg-success-subtle">
+                        📅
+                    </div>
+
+                    <div class="stat-title">
+                        Chuyến hôm nay
+                    </div>
+
+                    <div class="stat-number text-success">
+                        @Model.TodayTrips
+                    </div>
+
+                </div>
+
             </div>
-
-            <div class="management-name">
-                Quản lý Vé
-            </div>
-
-            <div class="management-description">
-                Theo dõi đặt vé, trạng thái và doanh thu.
-            </div>
-
-            <a href="#"
-               class="management-button">
-                Quản lý
-            </a>
-
-        </div>
-
-
-        <!-- KHÁCH HÀNG -->
-        <div class="management-card">
-
-            <div class="management-icon">
-                👥
-            </div>
-
-            <div class="management-name">
-                Quản lý Khách hàng
-            </div>
-
-            <div class="management-description">
-                Xem và quản lý thông tin khách hàng.
-            </div>
-
-            <a href="#"
-               class="management-button">
-                Quản lý
-            </a>
-
-        </div>
-
-
-        <!-- THỐNG KÊ -->
-        <div class="management-card">
-
-            <div class="management-icon">
-                📊
-            </div>
-
-            <div class="management-name">
-                Thống kê
-            </div>
-
-            <div class="management-description">
-                Xem thống kê chuyến xe, vé và doanh thu.
-            </div>
-
-            <a href="#"
-               class="management-button">
-                Xem thống kê
-            </a>
 
         </div>
 
     </div>
 
 
-    <!-- DOANH THU + ĐẶT VÉ -->
-    <div class="dashboard-grid">
+    <!-- =====================================
+         DOANH THU
+         ===================================== -->
 
-        <!-- DOANH THU -->
-        <div class="dashboard-card">
+    <h4 class="section-title">
+        💰 Doanh thu
+    </h4>
 
-            <div class="dashboard-card-title">
-                💰 Doanh thu
-            </div>
+    <div class="row g-4 mb-5">
 
-            <div class="revenue-value">
-                @Model.ConfirmedRevenue.ToString("N0") VNĐ
-            </div>
+        <!-- TỔNG DOANH THU -->
 
-            <div class="revenue-label">
-                Doanh thu từ các vé đã xác nhận
-            </div>
+        <div class="col-lg-4">
 
-            <div class="today-box">
-                Tổng doanh thu tất cả trạng thái:
-                <strong>
-                    @Model.TotalRevenue.ToString("N0") VNĐ
-                </strong>
+            <div class="card revenue-card">
+
+                <div class="card-body">
+
+                    <div class="revenue-label">
+                        Tổng doanh thu
+                    </div>
+
+                    <div class="revenue-value text-primary">
+                        @Model.TotalRevenue.ToString("N0") ₫
+                    </div>
+
+                </div>
+
             </div>
 
         </div>
 
 
-        <!-- ĐẶT VÉ -->
-        <div class="dashboard-card">
+        <!-- DOANH THU XÁC NHẬN -->
 
-            <div class="dashboard-card-title">
-                🎫 Tình trạng đặt vé
-            </div>
+        <div class="col-lg-4">
 
-            <div class="booking-row">
+            <div class="card revenue-card">
 
-                <span class="booking-label">
-                    Tổng số vé
-                </span>
+                <div class="card-body">
 
-                <span class="booking-value">
-                    @Model.TotalBookings
-                </span>
+                    <div class="revenue-label">
+                        Doanh thu đã xác nhận
+                    </div>
 
-            </div>
+                    <div class="revenue-value text-success">
+                        @Model.ConfirmedRevenue.ToString("N0") ₫
+                    </div>
 
-
-            <div class="booking-row">
-
-                <span class="booking-label">
-                    Vé đã xác nhận
-                </span>
-
-                <span class="booking-value confirmed">
-                    @Model.ConfirmedBookings
-                </span>
+                </div>
 
             </div>
 
+        </div>
 
-            <div class="booking-row">
 
-                <span class="booking-label">
-                    Vé đã hủy
-                </span>
+        <!-- DOANH THU HÔM NAY -->
 
-                <span class="booking-value cancelled">
-                    @Model.CancelledBookings
-                </span>
+        <div class="col-lg-4">
+
+            <div class="card revenue-card">
+
+                <div class="card-body">
+
+                    <div class="revenue-label">
+                        Vé đã xác nhận
+                    </div>
+
+                    <div class="revenue-value text-success">
+                        @Model.ConfirmedBookings
+                    </div>
+
+                    <div class="small text-muted mt-2">
+                        Vé đã hủy:
+                        @Model.CancelledBookings
+                    </div>
+
+                </div>
 
             </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         QUẢN LÝ HỆ THỐNG
+         ===================================== -->
+
+    <h4 class="section-title">
+        ⚙️ Quản lý hệ thống
+    </h4>
+
+    <div class="row g-4 mb-5">
+
+        <!-- NHÀ XE -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="management-card">
+
+                <div class="management-icon">
+                    🏢
+                </div>
+
+                <h5>
+                    Quản lý Nhà xe
+                </h5>
+
+                <p>
+                    Thêm, sửa, xóa và xem thông tin
+                    các nhà xe trong hệ thống.
+                </p>
+
+                <a asp-controller="AdminBusCompanies"
+                   asp-action="Index"
+                   class="management-button">
+                    Quản lý
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- XE -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="management-card">
+
+                <div class="management-icon">
+                    🚌
+                </div>
+
+                <h5>
+                    Quản lý Xe
+                </h5>
+
+                <p>
+                    Quản lý xe, biển số, loại xe,
+                    ghế ngồi và giường nằm.
+                </p>
+
+                <a asp-controller="AdminBuses"
+                   asp-action="Index"
+                   class="management-button">
+                    Quản lý
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- TUYẾN -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="management-card">
+
+                <div class="management-icon">
+                    🛣️
+                </div>
+
+                <h5>
+                    Quản lý Tuyến
+                </h5>
+
+                <p>
+                    Quản lý điểm đi, điểm đến,
+                    khoảng cách và thời gian.
+                </p>
+
+                <a asp-controller="AdminRoutes"
+                   asp-action="Index"
+                   class="management-button">
+                    Quản lý
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- CHUYẾN -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="management-card">
+
+                <div class="management-icon">
+                    🚍
+                </div>
+
+                <h5>
+                    Quản lý Chuyến
+                </h5>
+
+                <p>
+                    Quản lý lịch chạy, xe,
+                    tuyến và giá vé.
+                </p>
+
+                <a asp-controller="AdminTrips"
+                   asp-action="Index"
+                   class="management-button">
+                    Quản lý
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- GHẾ / GIƯỜNG -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="management-card">
+
+                <div class="management-icon">
+                    💺
+                </div>
+
+                <h5>
+                    Quản lý Ghế/Giường
+                </h5>
+
+                <p>
+                    Xem sơ đồ ghế, giường,
+                    ghế trống và ghế đã đặt.
+                </p>
+
+                <a asp-controller="AdminSeats"
+                   asp-action="Index"
+                   class="management-button">
+                    Quản lý
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- VÉ -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="management-card">
+
+                <div class="management-icon">
+                    🎫
+                </div>
+
+                <h5>
+                    Quản lý Vé
+                </h5>
+
+                <p>
+                    Xem danh sách vé,
+                    thông tin đặt vé và trạng thái.
+                </p>
+
+                <a asp-controller="AdminBookings"
+                   asp-action="Index"
+                   class="management-button">
+                    Quản lý
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- KHÁCH HÀNG -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="management-card">
+
+                <div class="management-icon">
+                    👥
+                </div>
+
+                <h5>
+                    Quản lý Khách hàng
+                </h5>
+
+                <p>
+                    Xem, sửa và quản lý thông tin
+                    khách hàng và lịch sử đặt vé.
+                </p>
+
+                <a asp-controller="AdminCustomers"
+                   asp-action="Index"
+                   class="management-button">
+                    Quản lý
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- THỐNG KÊ -->
+
+        <div class="col-xl-3 col-md-6">
+
+            <div class="management-card">
+
+                <div class="management-icon">
+                    📊
+                </div>
+
+                <h5>
+                    Thống kê
+                </h5>
+
+                <p>
+                    Xem doanh thu, số vé,
+                    tuyến xe và hoạt động hệ thống.
+                </p>
+
+                <a asp-controller="AdminStatistics"
+                   asp-action="Index"
+                   class="management-button">
+                    Xem thống kê
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         TRẠNG THÁI VÉ
+         ===================================== -->
+
+    <h4 class="section-title">
+        🎫 Trạng thái vé
+    </h4>
+
+    <div class="row g-4 mb-5">
+
+        <!-- XÁC NHẬN -->
+
+        <div class="col-md-6">
+
+            <div class="card status-card">
+
+                <div class="card-body">
+
+                    <div class="status-item">
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <div>
+
+                                <div class="text-muted">
+                                    Vé đã xác nhận
+                                </div>
+
+                                <div class="status-number text-success">
+                                    @Model.ConfirmedBookings
+                                </div>
+
+                            </div>
+
+                            <div style="font-size: 35px;">
+                                ✅
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- HỦY -->
+
+        <div class="col-md-6">
+
+            <div class="card status-card">
+
+                <div class="card-body">
+
+                    <div class="status-item">
+
+                        <div class="d-flex justify-content-between align-items-center">
+
+                            <div>
+
+                                <div class="text-muted">
+                                    Vé đã hủy
+                                </div>
+
+                                <div class="status-number text-danger">
+                                    @Model.CancelledBookings
+                                </div>
+
+                            </div>
+
+                            <div style="font-size: 35px;">
+                                ❌
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         THAO TÁC NHANH
+         ===================================== -->
+
+    <h4 class="section-title">
+        ⚡ Thao tác nhanh
+    </h4>
+
+    <div class="row g-3">
+
+        <div class="col-md-3">
+
+            <a asp-controller="AdminBusCompanies"
+               asp-action="Create"
+               class="quick-action">
+
+                <span class="quick-icon">
+                    ➕
+                </span>
+
+                Thêm nhà xe
+
+            </a>
+
+        </div>
+
+
+        <div class="col-md-3">
+
+            <a asp-controller="AdminBuses"
+               asp-action="Create"
+               class="quick-action">
+
+                <span class="quick-icon">
+                    🚌
+                </span>
+
+                Thêm xe
+
+            </a>
+
+        </div>
+
+
+        <div class="col-md-3">
+
+            <a asp-controller="AdminRoutes"
+               asp-action="Create"
+               class="quick-action">
+
+                <span class="quick-icon">
+                    🛣️
+                </span>
+
+                Thêm tuyến
+
+            </a>
+
+        </div>
+
+
+        <div class="col-md-3">
+
+            <a asp-controller="AdminTrips"
+               asp-action="Create"
+               class="quick-action">
+
+                <span class="quick-icon">
+                    🚍
+                </span>
+
+                Thêm chuyến
+
+            </a>
 
         </div>
 

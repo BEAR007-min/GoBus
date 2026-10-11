@@ -1,0 +1,598 @@
+@model GoBus.Models.Booking
+
+@{
+    ViewData["Title"] = "Chi tiết Vé";
+
+    var isCancelled = Model.Status == "Cancelled";
+}
+
+<style>
+    .details-page {
+        padding: 30px 0 50px;
+    }
+
+    .info-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.07);
+        height: 100%;
+    }
+
+    .section-title {
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .info-label {
+        color: #6c757d;
+        font-size: 14px;
+        margin-bottom: 3px;
+    }
+
+    .info-value {
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .booking-id {
+        font-size: 28px;
+        font-weight: 700;
+    }
+
+    .total-amount {
+        font-size: 30px;
+        font-weight: 700;
+    }
+
+    .seat-item {
+        border: 1px solid #dee2e6;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 10px;
+        background: #f8f9fa;
+    }
+
+    .seat-number {
+        font-size: 20px;
+        font-weight: 700;
+    }
+</style>
+
+<div class="container details-page">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2 class="fw-bold mb-1">
+                🎫 Chi tiết Vé #@Model.Id
+            </h2>
+
+            <p class="text-muted mb-0">
+                Thông tin chi tiết của vé đặt
+            </p>
+
+        </div>
+
+        <a asp-action="Index"
+           class="btn btn-outline-secondary">
+            ← Quay lại
+        </a>
+
+    </div>
+
+
+    <!-- THÔNG BÁO -->
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+
+            @TempData["SuccessMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+
+            @TempData["ErrorMessage"]
+
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert">
+            </button>
+
+        </div>
+    }
+
+
+    <!-- THÔNG TIN VÉ -->
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-8">
+
+            <div class="card info-card">
+
+                <div class="card-body">
+
+                    <h5 class="section-title">
+                        📋 Thông tin đặt vé
+                    </h5>
+
+                    <div class="row g-4">
+
+                        <div class="col-md-6">
+
+                            <div class="info-label">
+                                Mã vé
+                            </div>
+
+                            <div class="booking-id">
+                                #@Model.Id
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="info-label">
+                                Trạng thái
+                            </div>
+
+                            <div class="mt-1">
+
+                                @if (Model.Status == "Confirmed")
+                                {
+                                    <span class="badge bg-success fs-6">
+                                        Đã xác nhận
+                                    </span>
+                                }
+                                else if (Model.Status == "Cancelled")
+                                {
+                                    <span class="badge bg-danger fs-6">
+                                        Đã hủy
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary fs-6">
+                                        @Model.Status
+                                    </span>
+                                }
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="info-label">
+                                Ngày đặt
+                            </div>
+
+                            <div class="info-value">
+                                @Model.BookingDate
+                                    .ToString("dd/MM/yyyy HH:mm:ss")
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="info-label">
+                                Tổng số chỗ
+                            </div>
+
+                            <div class="info-value">
+                                @Model.BookingDetails.Count
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- TỔNG TIỀN -->
+
+        <div class="col-lg-4">
+
+            <div class="card info-card">
+
+                <div class="card-body text-center">
+
+                    <div class="text-muted mb-2">
+                        Tổng tiền
+                    </div>
+
+                    <div class="total-amount text-primary">
+                        @Model.TotalAmount.ToString("N0") ₫
+                    </div>
+
+                    @if (isCancelled)
+                    {
+                        <div class="mt-2">
+                            <span class="text-danger">
+                                Vé đã hủy
+                            </span>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="mt-2">
+                            <span class="text-success">
+                                Vé đang có hiệu lực
+                            </span>
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- KHÁCH HÀNG -->
+
+    <div class="card info-card mb-4">
+
+        <div class="card-body">
+
+            <h5 class="section-title">
+                👤 Thông tin khách hàng
+            </h5>
+
+            @if (Model.Customer != null)
+            {
+                <div class="row g-4">
+
+                    <div class="col-md-4">
+
+                        <div class="info-label">
+                            Họ và tên
+                        </div>
+
+                        <div class="info-value">
+                            @Model.Customer.FullName
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <div class="info-label">
+                            Số điện thoại
+                        </div>
+
+                        <div class="info-value">
+                            @Model.Customer.Phone
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <div class="info-label">
+                            Email
+                        </div>
+
+                        <div class="info-value">
+                            @Model.Customer.Email
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning mb-0">
+                    Không tìm thấy thông tin khách hàng.
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+
+    <!-- CHUYẾN XE -->
+
+    <div class="card info-card mb-4">
+
+        <div class="card-body">
+
+            <h5 class="section-title">
+                🚌 Thông tin chuyến xe
+            </h5>
+
+            @if (Model.Trip != null)
+            {
+                <div class="row g-4">
+
+                    <div class="col-md-6">
+
+                        <div class="info-label">
+                            Tuyến đường
+                        </div>
+
+                        <div class="info-value">
+
+                            @Model.Trip.Route?.Departure
+
+                            <span class="text-muted">
+                                →
+                            </span>
+
+                            @Model.Trip.Route?.Destination
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <div class="info-label">
+                            Nhà xe
+                        </div>
+
+                        <div class="info-value">
+                            @Model.Trip.BusCompany?.Name
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <div class="info-label">
+                            Biển số xe
+                        </div>
+
+                        <div class="info-value">
+                            @Model.Trip.Bus?.LicensePlate
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <div class="info-label">
+                            Loại xe
+                        </div>
+
+                        <div class="info-value">
+
+                            @if (Model.Trip.Bus?.LayoutType == "Sleeper24")
+                            {
+                                <span>
+                                    🛏️ Giường nằm 24 chỗ
+                                </span>
+                            }
+                            else
+                            {
+                                <span>
+                                    💺 Ghế ngồi 45 chỗ
+                                </span>
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-4">
+
+                        <div class="info-label">
+                            Giá vé / chỗ
+                        </div>
+
+                        <div class="info-value">
+                            @Model.Trip.Price.ToString("N0") ₫
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <div class="info-label">
+                            Thời gian khởi hành
+                        </div>
+
+                        <div class="info-value">
+                            @Model.Trip.DepartureTime
+                                .ToString("dd/MM/yyyy HH:mm")
+                        </div>
+
+                    </div>
+
+
+                    <div class="col-md-6">
+
+                        <div class="info-label">
+                            Thời gian đến
+                        </div>
+
+                        <div class="info-value">
+                            @Model.Trip.ArrivalTime
+                                .ToString("dd/MM/yyyy HH:mm")
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning mb-0">
+                    Không tìm thấy thông tin chuyến xe.
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+
+    <!-- GHẾ / GIƯỜNG -->
+
+    <div class="card info-card mb-4">
+
+        <div class="card-body">
+
+            <h5 class="section-title">
+                💺 Ghế / Giường đã đặt
+            </h5>
+
+            @if (Model.BookingDetails.Any())
+            {
+                <div class="row">
+
+                    @foreach (var detail in Model.BookingDetails)
+                    {
+                        <div class="col-md-6 col-lg-4">
+
+                            <div class="seat-item">
+
+                                <div class="seat-number">
+
+                                    @if (detail.Seat?.SeatType == "Sleeper")
+                                    {
+                                        <span>
+                                            🛏️
+                                            @detail.Seat.SeatNumber
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            💺
+                                            @detail.Seat?.SeatNumber
+                                        </span>
+                                    }
+
+                                </div>
+
+                                <div class="text-muted small mt-1">
+
+                                    @if (detail.Seat?.SeatType == "Sleeper")
+                                    {
+                                        <span>
+                                            Giường nằm
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span>
+                                            Ghế ngồi
+                                        </span>
+                                    }
+
+                                </div>
+
+                                <div class="mt-2">
+
+                                    Giá:
+
+                                    <strong>
+                                        @detail.Price.ToString("N0") ₫
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning mb-0">
+                    Vé này không có thông tin ghế/giường.
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+
+    <!-- THAO TÁC -->
+
+    <div class="d-flex gap-2 flex-wrap">
+
+        <a asp-action="Index"
+           class="btn btn-outline-secondary">
+            ← Danh sách vé
+        </a>
+
+
+        @if (!isCancelled)
+        {
+            <form asp-action="Cancel"
+                  method="post"
+                  onsubmit="return confirm('Bạn có chắc chắn muốn hủy vé #@Model.Id không?');">
+
+                @Html.AntiForgeryToken()
+
+                <input type="hidden"
+                       name="id"
+                       value="@Model.Id" />
+
+                <button type="submit"
+                        class="btn btn-danger">
+                    ❌ Hủy vé
+                </button>
+
+            </form>
+        }
+        else
+        {
+            <span class="btn btn-secondary disabled">
+                Vé đã được hủy
+            </span>
+        }
+
+    </div>
+
+
+    <!-- LƯU Ý -->
+
+    <div class="alert alert-info mt-4">
+
+        <strong>ℹ️ Lưu ý:</strong>
+
+        Khi Admin hủy vé, các ghế/giường trong vé sẽ được trả lại trạng thái
+        <strong>còn trống</strong> và số ghế còn lại của chuyến xe sẽ được cập nhật.
+
+    </div>
+
+</div>
