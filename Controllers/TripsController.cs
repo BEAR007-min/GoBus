@@ -39,13 +39,19 @@ public async Task<IActionResult> Details(int id)
         string? destination,
         DateTime? date)
     {
+
+        if (date.HasValue && date.Value.Date < DateTime.Today)
+    {
+        TempData["Error"] = "Ngày đi không được ở trong quá khứ.";
+        return RedirectToAction("Index", "Home");
+    }
+
         var query = _context.Trips
             .Include(t => t.Route)
             .Include(t => t.BusCompany)
             .Include(t => t.Bus)
             .AsNoTracking()
             .AsQueryable();
-
 
         // =================================================
         // 1. LỌC ĐIỂM ĐI

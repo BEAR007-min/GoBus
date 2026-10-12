@@ -25,19 +25,11 @@
 
                     </div>
 
-                    @if (TempData["DevOtp"] != null)
-                    {
-                        <div class="alert alert-warning">
-                            <strong>OTP TEST:</strong>
-                            @TempData["DevOtp"]
-
-                            <br />
-
-                            <small>
-                                Chỉ hiển thị trong quá trình phát triển.
-                            </small>
-                        </div>
-                    }
+                    <div class="alert alert-info">
+                        📩 Mã OTP đã được gửi đến Email của bạn.
+                        <br />
+                        Mã có hiệu lực trong <strong>5 phút</strong>.
+                    </div>
 
                     <form asp-action="VerifyOtp"
                           asp-controller="ForgotPassword"

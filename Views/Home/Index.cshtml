@@ -195,29 +195,61 @@
             </div>
 
 
-            <!-- ============================= -->
             <!-- NGÀY ĐI -->
-            <!-- ============================= -->
-
+            
             <div class="search-item">
+                <label for="dateDisplay">Ngày đi</label>
 
-                <label for="dateDisplay">
-                    Ngày đi
-                </label>
-
-                <input type="text"
-                       id="dateDisplay"
-                       class="form-control"
-                       placeholder="DD/MM/YYYY"
-                       maxlength="10"
-                       autocomplete="off">
+                <input type="date"
+                    id="dateDisplay"
+                    class="form-control"
+                    autocomplete="off"
+                    min="@DateTime.Today.ToString("yyyy-MM-dd")">
 
                 <input type="hidden"
-                       id="date"
-                       name="date">
-
+                    id="date"
+                    name="date">
             </div>
 
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+
+                    const dateDisplay = document.getElementById("dateDisplay");
+                    const date = document.getElementById("date");
+
+                    // Ngày hiện tại
+                    const today = new Date();
+
+                    // YYYY-MM-DD theo giờ địa phương
+                    const year = today.getFullYear();
+                    const month = String(today.getMonth() + 1).padStart(2, "0");
+                    const day = String(today.getDate()).padStart(2, "0");
+
+                    const todayString = `${year}-${month}-${day}`;
+
+                    // Không cho chọn ngày hôm qua trở về trước
+                    dateDisplay.min = todayString;
+
+                    // Mặc định chọn hôm nay
+                    dateDisplay.value = todayString;
+                    date.value = todayString;
+
+                    // Khi người dùng chọn ngày
+                    dateDisplay.addEventListener("change", function () {
+
+                        if (this.value < todayString) {
+                            alert("Ngày đi không được ở trong quá khứ.");
+
+                            this.value = todayString;
+                            date.value = todayString;
+
+                            return;
+                        }
+
+                        date.value = this.value;
+                    });
+                });
+            </script>
 
             <!-- ============================= -->
             <!-- BUTTON -->
