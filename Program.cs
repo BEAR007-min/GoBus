@@ -1,4 +1,6 @@
 using GoBus.Services;
+using GoBus.Models;
+using GoBus.Services;
 using GoBus.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -20,6 +22,12 @@ builder.Services.AddDbContext<GoBusDbContext>(options =>
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<PasswordService>();
+builder.Services.AddMemoryCache();
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings"));
+
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<OtpService>();
 
 var app = builder.Build();
 
